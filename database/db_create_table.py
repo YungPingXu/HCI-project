@@ -15,7 +15,7 @@ cur = conn.cursor()
 ###################
 
 cur.execute("""
-    CREATE TABLE test2(
+    CREATE TABLE test(
         col1 TEXT,
         col2 TEXT
     );
