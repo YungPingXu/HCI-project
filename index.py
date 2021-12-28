@@ -43,7 +43,7 @@ def handle_message(event):
     #line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
 
     message = TemplateSendMessage(
-        alt_text='Buttons template',
+        alt_text='Scheduling Bot Panel',
         template=ButtonsTemplate(
             thumbnail_image_url='https://imgur.com/nXT75He.jpg',
             title='Scheduling Bot',
