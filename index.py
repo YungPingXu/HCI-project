@@ -51,7 +51,7 @@ def handle_message(event):
             actions=[
                 MessageTemplateAction(
                     label='我要發起一個活動!',
-                    text='message text'
+                    text='這邊就會跳出一個彈出式網頁'
                 ),
                 URITemplateAction(
                     label='填寫時間!(這邊之後可以放產生的連結)',
