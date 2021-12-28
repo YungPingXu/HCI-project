@@ -46,21 +46,21 @@ def handle_message(event):
         alt_text='Buttons template',
         template=ButtonsTemplate(
             thumbnail_image_url='https://example.com/image.jpg',
-            title='Menu',
-            text='Please select',
+            title='Scheduling Bot',
+            text='請選擇您所需之功能',
             actions=[
                 PostbackTemplateAction(
                     label='postback',
-                    text='postback text',
-                    data='action=buy&itemid=1'
+                    text=reply_message
+                    #data='action=buy&itemid=1'
                 ),
                 MessageTemplateAction(
-                    label='message',
+                    label='我要發起一個活動!',
                     text='message text'
                 ),
                 URITemplateAction(
-                    label='uri',
-                    uri='http://example.com/'
+                    label='填寫時間!(這邊之後可以放產生的連結)',
+                    uri='https://www.youtube.com/'
                 )
             ]
         )
