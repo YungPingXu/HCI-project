@@ -62,6 +62,10 @@ def handle_message(event):
     )
     if user_message == "@bot":
         line_bot_api.reply_message(event.reply_token, message)
+    elif user_message == "total":
+        respond = "@昱瑋可以趕快填時間嗎?"
+        line_bot_api.reply_message(event.reply_token, respond)
+
 
 # this event will be triggered when the bot is invited to a group
 @handler.add(JoinEvent)
