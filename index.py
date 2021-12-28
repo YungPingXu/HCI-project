@@ -49,11 +49,6 @@ def handle_message(event):
             title='Scheduling Bot',
             text='請選擇您所需之功能',
             actions=[
-                PostbackTemplateAction(
-                    label='postback',
-                    text=reply_message
-                    #data='action=buy&itemid=1'
-                ),
                 MessageTemplateAction(
                     label='我要發起一個活動!',
                     text='message text'
