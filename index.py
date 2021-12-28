@@ -42,6 +42,31 @@ def handle_message(event):
     reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
     line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
 
+    message = TemplateSendMessage(
+        alt_text='Buttons template',
+        template=ButtonsTemplate(
+            thumbnail_image_url='https://example.com/image.jpg',
+            title='Menu',
+            text='Please select',
+            actions=[
+                PostbackTemplateAction(
+                    label='postback',
+                    text='postback text',
+                    data='action=buy&itemid=1'
+                ),
+                MessageTemplateAction(
+                    label='message',
+                    text='message text'
+                ),
+                URITemplateAction(
+                    label='uri',
+                    uri='http://example.com/'
+                )
+            ]
+        )
+    )
+    line_bot_api.reply_message(event.reply_token, message)
+
 # this event will be triggered when the bot is invited to a group
 @handler.add(JoinEvent)
 def handle_join(event):
