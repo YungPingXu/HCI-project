@@ -41,7 +41,7 @@ def handle_message(event):
     print(event.message)
     reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
     #line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
-
+    
     message = TemplateSendMessage(
         alt_text='Scheduling Bot Panel',
         template=ButtonsTemplate(
@@ -60,7 +60,8 @@ def handle_message(event):
             ]
         )
     )
-    line_bot_api.reply_message(event.reply_token, message)
+    if user_message == "@bot":
+        line_bot_api.reply_message(event.reply_token, message)
 
 # this event will be triggered when the bot is invited to a group
 @handler.add(JoinEvent)
