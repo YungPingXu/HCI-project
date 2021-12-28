@@ -45,7 +45,7 @@ def handle_message(event):
     message = TemplateSendMessage(
         alt_text='Buttons template',
         template=ButtonsTemplate(
-            thumbnail_image_url='https://example.com/image.jpg',
+            thumbnail_image_url='https://imgur.com/nXT75He.jpg',
             title='Scheduling Bot',
             text='請選擇您所需之功能',
             actions=[
