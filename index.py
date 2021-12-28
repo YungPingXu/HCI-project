@@ -39,7 +39,7 @@ def handle_message(event):
     user_name = profile.display_name
     user_message = event.message.text
     print(event.message)
-    reply_message = "@" + user_name + "\n您傳送的訊息為：\n" + user_message
+    reply_message = "@" + user_name + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
     line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
 
 # this event will be triggered when the bot is invited to a group
