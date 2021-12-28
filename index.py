@@ -63,7 +63,7 @@ def handle_message(event):
     )
     if user_message == "@bot":
         line_bot_api.reply_message(event.reply_token, message)
-    elif user_message == "total":
+    if user_message == "total":
         line_bot_api.reply_message(event.reply_token, respond_message)
 
 
