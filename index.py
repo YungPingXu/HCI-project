@@ -2,10 +2,13 @@ from flask import Flask, request, abort, render_template, redirect, url_for
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
-from linebot.models import FlexSendMessage, TextSendMessage
 import os
-import json
+import time
+import string
+import random
 from dotenv import load_dotenv
+from database import db_utils
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -19,6 +22,8 @@ handler = WebhookHandler(webhook_token)
 
 # don't touch this
 # listen all the post request from /callback
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -34,19 +39,20 @@ def callback():
     return 'OK'
 
 # this event will be triggered when someone send a message in a group
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_id = event.source.user_id
     profile = line_bot_api.get_profile(user_id)
     user_name = profile.display_name
     user_message = event.message.text
-    message = event.message.text
     print(event.message)
 
     # reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
     # respond_message = "@昱瑋可以趕快填時間嗎?"
     #line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
-    
+
     # message = TemplateSendMessage(
     #     alt_text='Scheduling Bot Panel',
     #     template=ButtonsTemplate(
@@ -70,17 +76,26 @@ def handle_message(event):
     # if user_message == "total":
     #     line_bot_api.reply_message(event.reply_token, respond_message)
 
-    if message == "botbot":
-        FlexMessage = json.load(open('new_event.json','r',encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
-    elif message == "botdone":
-        FlexMessage = json.load(open('attend_event.json','r',encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
-    elif message == "hihi":
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "I'm here !! :)"))
+    if message == "@bot":
+        FlexMessage = json.load(open('new_event.json', 'r', encoding='utf-8'))
+        line_bot_api.reply_message(
+            event.reply_token, FlexSendMessage('profile', FlexMessage))
+    elif message == "@done":
+        FlexMessage = json.load(
+            open('attend_event.json', 'r', encoding='utf-8'))
+        line_bot_api.reply_message(
+            event.reply_token, FlexSendMessage('profile', FlexMessage))
+    elif message == "knock knock":
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text="I'm here !! :)"))
 
+    reply_message = "@" + user_name + "\n您傳送的訊息為：\n" + user_message
+    line_bot_api.reply_message(
+        event.reply_token, TextMessage(text=reply_message))
 
 # this event will be triggered when the bot is invited to a group
+
+
 @handler.add(JoinEvent)
 def handle_join(event):
     summary = line_bot_api.get_group_summary(event.source.group_id)
@@ -90,25 +105,67 @@ def handle_join(event):
     message += "picture url" + summary.picture_url
     line_bot_api.reply_message(event.reply_token, TextSendMessage(message))
 
-@app.route("/", methods=["GET"]) # 路由和處理函式配對
-def index():
-	return render_template("index.html")
 
-@app.route("/create-event", methods=["POST"]) # 路由和處理函式配對
+@app.route("/", methods=["GET"])  # 路由和處理函式配對
+def index():
+    return render_template("index.html")
+
+
+@app.route("/create-event", methods=["POST"])  # 路由和處理函式配對
 def create_event():
     if request.method == "POST":
-        print(request.values["event_name"])
-        print(request.values["date"])
-        print(request.values["start_time"])
-        print(request.values["end_time"])
-        print(request.values["anonymous"])
-        print(request.values["preference"])
-        print(request.values["deadline_date"])
-        print(request.values["deadline_time"])
+        event_attribute = []
+
+        length_of_string = 8
+        event_id = ''.join(random.SystemRandom().choice(
+            string.ascii_letters + string.digits) for _ in range(length_of_string))
+        event_attribute.append(event_id)  # need modify
+        event_attribute.append(request.values["event_name"])
+
+        dates = []
+        for date in request.values["date"].split(','):
+            temp_date = date.split('-')
+            change_date = temp_date[2] + '-' + \
+                temp_date[1] + '-' + temp_date[0]
+            dates.append(change_date)
+        event_attribute.append(dates[0])
+        event_attribute.append(dates[1])
+
+        event_attribute.append(request.values["start_time"])
+        event_attribute.append(request.values["end_time"])
+
+        deadline_date = request.values["deadline_date"]
+        if request.values["deadline_date"] == '':
+            deadline_date = dates[0]
+        event_attribute.append(deadline_date)
+
+        deadline_time = request.values["deadline_time"]
+        if request.values["deadline_time"] == '':
+            deadline_time = request.values["start_time"]
+        event_attribute.append(deadline_time)
+
+        event_attribute.append(request.values["anonymous"])
+
+        preference = request.values["preference"]
+        if request.values["preference"] == '':
+            preference = 'all_ok'
+        event_attribute.append(preference)
+
+        # event_attribute.append(request.values["have_must_attend"])
+        event_attribute.append('false')
+
+        db_utils.insert_event(event_attribute)
+
+        # print * of table event
+        db_utils.test()
+
         return "success"
     return redirect(url_for("index"))
 
+
 # don't touch this
 if __name__ == "__main__":
+    db_utils.create_tables()
+    db_utils.init_time()
     app.debug = True
     app.run()
