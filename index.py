@@ -2,7 +2,7 @@ from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
-from linebot.models import FlexSendMessage
+from linebot.models import FlexSendMessage, TextSendMessage
 
 import os
 import json
@@ -76,6 +76,8 @@ def handle_message(event):
     if message == "@bot":
         FlexMessage = json.load(open('linebot.json','r',encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
+    elif message == "knock knock":
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "I'm here !! :)"))
 
 
 # this event will be triggered when the bot is invited to a group
