@@ -1,7 +1,7 @@
 from flask import Flask, request, abort, render_template, redirect, url_for
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import *
+from linebot.models import FlexSendMessage, TextSendMessage
 import os
 from dotenv import load_dotenv
 load_dotenv()
