@@ -1,4 +1,4 @@
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template, redirect, url_for
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
@@ -51,6 +51,24 @@ def handle_join(event):
     message += "group name" + summary.group_name + "\n"
     message += "picture url" + summary.picture_url
     line_bot_api.reply_message(event.reply_token, TextSendMessage(message))
+
+@app.route("/", methods=["GET"]) # 路由和處理函式配對
+def index():
+	return render_template("index.html")
+
+@app.route("/create-event", methods=["POST"]) # 路由和處理函式配對
+def create_event():
+    if request.method == "POST":
+        print(request.values["event_name"])
+        print(request.values["date"])
+        print(request.values["start_time"])
+        print(request.values["end_time"])
+        print(request.values["anonymous"])
+        print(request.values["preference"])
+        print(request.values["deadline_date"])
+        print(request.values["deadline_time"])
+        return "success"
+    return redirect(url_for("index"))
 
 # don't touch this
 if __name__ == "__main__":
