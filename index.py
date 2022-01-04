@@ -73,7 +73,7 @@ def handle_message(event):
     elif message == "@done":
         FlexMessage = json.load(open('attend_event.json','r',encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
-    elif message == "knock knock":
+    elif message == "hihi":
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "I'm here !! :)"))
 
 
