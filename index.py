@@ -1,11 +1,8 @@
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template, redirect, url_for
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
-from linebot.models import FlexSendMessage, TextSendMessage
-
 import os
-import json
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -37,14 +34,12 @@ def callback():
 # this event will be triggered when someone send a message in a group
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    message_type = event.message.type
     user_id = event.source.user_id
     profile = line_bot_api.get_profile(user_id)
-    message = event.message.text
-
     user_name = profile.display_name
     user_message = event.message.text
     print(event.message)
+<<<<<<< HEAD
 
     # reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
     # respond_message = "@昱瑋可以趕快填時間嗎?"
@@ -82,6 +77,10 @@ def handle_message(event):
     elif message == "knock knock":
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "I'm here !! :)"))
 
+=======
+    reply_message = "@" + user_name + "\n您傳送的訊息為：\n" + user_message
+    line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
+>>>>>>> 3815d5573b4cba523f72968fe6a838051fa07df2
 
 # this event will be triggered when the bot is invited to a group
 @handler.add(JoinEvent)
@@ -92,6 +91,24 @@ def handle_join(event):
     message += "group name" + summary.group_name + "\n"
     message += "picture url" + summary.picture_url
     line_bot_api.reply_message(event.reply_token, TextSendMessage(message))
+
+@app.route("/", methods=["GET"]) # 路由和處理函式配對
+def index():
+	return render_template("index.html")
+
+@app.route("/create-event", methods=["POST"]) # 路由和處理函式配對
+def create_event():
+    if request.method == "POST":
+        print(request.values["event_name"])
+        print(request.values["date"])
+        print(request.values["start_time"])
+        print(request.values["end_time"])
+        print(request.values["anonymous"])
+        print(request.values["preference"])
+        print(request.values["deadline_date"])
+        print(request.values["deadline_time"])
+        return "success"
+    return redirect(url_for("index"))
 
 # don't touch this
 if __name__ == "__main__":
