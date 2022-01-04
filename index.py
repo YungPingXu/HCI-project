@@ -74,7 +74,10 @@ def handle_message(event):
     #     line_bot_api.reply_message(event.reply_token, respond_message)
 
     if message == "@bot":
-        FlexMessage = json.load(open('linebot.json','r',encoding='utf-8'))
+        FlexMessage = json.load(open('new_event.json','r',encoding='utf-8'))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
+    elif message == "@done":
+        FlexMessage = json.load(open('attend_event.json','r',encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
     elif message == "knock knock":
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "I'm here !! :)"))
