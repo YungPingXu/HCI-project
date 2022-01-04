@@ -38,6 +38,7 @@ def handle_message(event):
     profile = line_bot_api.get_profile(user_id)
     user_name = profile.display_name
     user_message = event.message.text
+    message = event.message.text
     print(event.message)
 
     # reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
