@@ -1,0 +1,178 @@
+{
+    "type": "bubble",
+    "hero": {
+      "type": "image",
+      "url": "https://cdn2.ettoday.net/images/6099/d6099909.jpg",
+      "size": "full",
+      "aspectRatio": "20:13",
+      "aspectMode": "cover",
+      "action": {
+        "type": "uri",
+        "uri": "http://linecorp.com/"
+      }
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "Scheduling Bot",
+          "weight": "bold",
+          "size": "xl"
+        },
+        {
+          "type": "box",
+          "layout": "baseline",
+          "margin": "md",
+          "contents": [
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "text",
+              "text": "5.0",
+              "size": "sm",
+              "color": "#999999",
+              "margin": "md",
+              "flex": 0
+            }
+          ]
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "margin": "lg",
+          "spacing": "sm",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "【發起活動】",
+                  "color": "#A0522D",
+                  "size": "sm",
+                  "flex": 3
+                },
+                {
+                  "type": "text",
+                  "text": "點擊以發起活動時間統計",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "sm",
+                  "flex": 5
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "【參與活動】",
+                  "color": "#A0522D",
+                  "size": "sm",
+                  "flex": 3
+                },
+                {
+                  "type": "text",
+                  "text": "點擊以參與活動時間統計",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "sm",
+                  "flex": 5
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "【查看結果】",
+                  "flex": 3,
+                  "color": "#A0522D",
+                  "size": "sm"
+                },
+                {
+                  "type": "text",
+                  "text": "點擊以查看目前統計結果",
+                  "flex": 5,
+                  "color": "#666666",
+                  "size": "sm",
+                  "wrap": true
+                }
+              ],
+              "spacing": "sm"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "box",
+      "layout": "vertical",
+      "spacing": "sm",
+      "contents": [
+        {
+          "type": "button",
+          "style": "link",
+          "height": "sm",
+          "action": {
+            "type": "uri",
+            "label": "發起活動",
+            "uri": "https://www.youtube.com/watch?v=eYQFKocqujc"
+          }
+        },
+        {
+          "type": "button",
+          "style": "link",
+          "height": "sm",
+          "action": {
+            "type": "uri",
+            "label": "參與活動",
+            "uri": "https://portal.nycu.edu.tw/#/login?redirect=%2F"
+          }
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "uri",
+            "label": "查看結果",
+            "uri": "https://www.facebook.com/"
+          },
+          "height": "sm",
+          "style": "link"
+        }
+      ],
+      "flex": 0
+    }
+  }

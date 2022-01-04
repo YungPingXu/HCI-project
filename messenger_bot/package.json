@@ -1,0 +1,48 @@
+{
+  "name": "assumezero-bot",
+  "version": "2.0.0",
+  "description": "A group chat bot that performs a variety of functions.",
+  "main": "main.js",
+  "engines": {
+    "node": "12.18.2"
+  },
+  "scripts": {
+    "start": "pm2 start src/main.js --name 'assumezero-bot'; npm run-script logs",
+    "restart": "pm2 restart assumezero-bot",
+    "stop": "pm2 stop assumezero-bot",
+    "logs": "pm2 logs assumezero-bot --lines=1000",
+    "login": "node src/main.js --force-login",
+    "test": "node tests/tests.js"
+  },
+  "author": "Cameron Bernhardt (AstroCB)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AstroCB/AssumeZero-Bot"
+  },
+  "dependencies": {
+    "@octokit/auth-app": "^2.11.0",
+    "@octokit/rest": "^18.1.0",
+    "body-parser": "^1.19.0",
+    "chrono-node": "^2.2.4",
+    "express": "^4.17.1",
+    "facebook-chat-api": "github:Schmavery/facebook-chat-api",
+    "html-entities": "^1.3.1",
+    "http": "0.0.0",
+    "humanize-duration": "^3.23.1",
+    "jimp": "^0.9.8",
+    "memjs": "^1.2.2",
+    "messenger-botcore": "github:AstroCB/BotCore",
+    "pm2": "^4.4.1",
+    "request": "^2.88.2",
+    "rss-parser": "^3.9.0",
+    "spotify-web-api-node": "^4.0.0",
+    "xmldom": "^0.5.0",
+    "xpath": "0.0.27"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "extend": ">=3.0.2",
+    "fast-deep-equal": "^2.0.1"
+  }
+}
