@@ -69,10 +69,10 @@ def handle_message(event):
     # if user_message == "total":
     #     line_bot_api.reply_message(event.reply_token, respond_message)
 
-    if message == "@bot":
+    if message == "botbot":
         FlexMessage = json.load(open('new_event.json','r',encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
-    elif message == "@done":
+    elif message == "botdone":
         FlexMessage = json.load(open('attend_event.json','r',encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile',FlexMessage))
     elif message == "hihi":
