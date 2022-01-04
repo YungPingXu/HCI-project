@@ -39,7 +39,6 @@ def handle_message(event):
     user_name = profile.display_name
     user_message = event.message.text
     print(event.message)
-<<<<<<< HEAD
 
     # reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
     # respond_message = "@昱瑋可以趕快填時間嗎?"
@@ -77,10 +76,6 @@ def handle_message(event):
     elif message == "knock knock":
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "I'm here !! :)"))
 
-=======
-    reply_message = "@" + user_name + "\n您傳送的訊息為：\n" + user_message
-    line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
->>>>>>> 3815d5573b4cba523f72968fe6a838051fa07df2
 
 # this event will be triggered when the bot is invited to a group
 @handler.add(JoinEvent)
