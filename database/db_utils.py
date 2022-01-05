@@ -137,7 +137,6 @@ def delete_choose_rows(user_delete):
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
-    ###################
 
     user_id = user_delete[0]
     event_id = user_delete[1]
@@ -286,9 +285,11 @@ def insert_people(user_attribute):
     user_name = user_attribute[1]
     event_id = user_attribute[2]
     group_id = user_attribute[3]
+
     done = False
     if user_attribute[4] == 'true':
         done = True
+
     must_attend = False
     if user_attribute[5] == 'true':
         must_attend = True
@@ -379,5 +380,6 @@ def test():
     rows = cur.fetchall()
     for row in rows:
         print(row)
+
     conn.commit()
     conn.close()
