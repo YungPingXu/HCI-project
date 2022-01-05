@@ -2,12 +2,15 @@ from flask import Flask, request, abort, render_template, redirect, url_for
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
+from linebot.models import FlexSendMessage, TextSendMessage
+from dotenv import load_dotenv
+from database import db_utils
+
 import os
 import time
 import string
 import random
-from dotenv import load_dotenv
-from database import db_utils
+import json
 
 load_dotenv()
 
@@ -39,63 +42,28 @@ def callback():
     return 'OK'
 
 # this event will be triggered when someone send a message in a group
-
-
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     user_id = event.source.user_id
     profile = line_bot_api.get_profile(user_id)
-    user_name = profile.display_name
-    user_message = event.message.text
+    # user_name = profile.display_name
+    # user_message = event.message.text
+    message = event.message.text
+
     print(event.message)
 
-    # reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
-    # respond_message = "@昱瑋可以趕快填時間嗎?"
-    #line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
-
-    # message = TemplateSendMessage(
-    #     alt_text='Scheduling Bot Panel',
-    #     template=ButtonsTemplate(
-    #         thumbnail_image_url='https://imgur.com/nXT75He.jpg',
-    #         title='Scheduling Bot',
-    #         text='請選擇您所需之功能',
-    #         actions=[
-    #             MessageTemplateAction(
-    #                 label='我要發起一個活動!',
-    #                 text='這邊就會跳出一個彈出式網頁'
-    #             ),
-    #             URITemplateAction(
-    #                 label='填寫時間!(這邊之後可以放產生的連結)',
-    #                 uri='https://www.youtube.com/'
-    #             )
-    #         ]
-    #     )
-    # )
-    # if user_message == "@bot":
-    #     line_bot_api.reply_message(event.reply_token, message)
-    # if user_message == "total":
-    #     line_bot_api.reply_message(event.reply_token, respond_message)
-
-    if message == "@bot":
+    if message == "botbot":
         FlexMessage = json.load(open('new_event.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(
-            event.reply_token, FlexSendMessage('profile', FlexMessage))
-    elif message == "@done":
-        FlexMessage = json.load(
-            open('attend_event.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(
-            event.reply_token, FlexSendMessage('profile', FlexMessage))
-    elif message == "knock knock":
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text="I'm here !! :)"))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+    elif message == "botdone":
+        FlexMessage = json.load(open('attend_event.json', 'r', encoding='utf-8'))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+    elif message == "hihi":
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="I'm here !! :)"))
 
-    reply_message = "@" + user_name + "\n您傳送的訊息為：\n" + user_message
-    line_bot_api.reply_message(
-        event.reply_token, TextMessage(text=reply_message))
+
 
 # this event will be triggered when the bot is invited to a group
-
-
 @handler.add(JoinEvent)
 def handle_join(event):
     summary = line_bot_api.get_group_summary(event.source.group_id)
