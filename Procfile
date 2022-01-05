@@ -1,1 +1,1 @@
-web: gunicorn index:app –log-file - --pythonpath HCI-PROJECT
+web: gunicorn index:app –log-file -
