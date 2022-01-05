@@ -6,11 +6,11 @@ from linebot.models import FlexSendMessage, TextSendMessage
 from dotenv import load_dotenv
 from database import db_utils
 
-import os
-import json
-import string
-import random
 import time
+import random
+import string
+import json
+import os
 
 load_dotenv()
 
@@ -86,7 +86,7 @@ def index():
 @app.route("/create-event", methods=["POST"])  # 路由和處理函式配對
 def create_event():
     if request.method == "POST":
-        '''event_attribute = []
+        event_attribute = []
 
         length_of_string = 8
         event_id = ''.join(random.SystemRandom().choice(
@@ -129,7 +129,7 @@ def create_event():
         db_utils.insert_event(event_attribute)
 
         # print * of table event
-        # db_utils.test()'''
+        # db_utils.test()
 
         return "success"
     return redirect(url_for("index"))
@@ -137,7 +137,7 @@ def create_event():
 
 # don't touch this
 if __name__ == "__main__":
-    # db_utils.create_tables()
-    # db_utils.init_time()
+    db_utils.create_tables()
+    db_utils.init_time()
     app.debug = True
     app.run()
