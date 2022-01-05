@@ -137,7 +137,7 @@ def create_event():
 
 # don't touch this
 if __name__ == "__main__":
-    db_utils.create_tables()
-    db_utils.init_time()
+    # db_utils.create_tables()
+    # db_utils.init_time()
     app.debug = True
     app.run()
