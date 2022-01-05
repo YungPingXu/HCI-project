@@ -25,8 +25,6 @@ handler = WebhookHandler(webhook_token)
 
 # don't touch this
 # listen all the post request from /callback
-
-
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -44,12 +42,11 @@ def callback():
 # this event will be triggered when someone send a message in a group
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    user_id = event.source.user_id
-    profile = line_bot_api.get_profile(user_id)
+    #user_id = event.source.user_id
+    #profile = line_bot_api.get_profile(user_id)
     # user_name = profile.display_name
     # user_message = event.message.text
     message = event.message.text
-
     print(event.message)
 
     if message == "botbot":
