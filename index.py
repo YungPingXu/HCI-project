@@ -3,9 +3,15 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 from linebot.models import FlexSendMessage, TextSendMessage
+from dotenv import load_dotenv
+from database import db_utils
+
 import os
 import json
-from dotenv import load_dotenv
+import string
+import random
+import time
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -47,33 +53,6 @@ def handle_message(event):
     message = event.message.text
     print(event.message)
 
-    # reply_message = "@" + user_name + "your ID:" + user_id + "\n Testing!!! \n 您傳送的訊息為：\n" + user_message
-    # respond_message = "@昱瑋可以趕快填時間嗎?"
-    #line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
-
-    # message = TemplateSendMessage(
-    #     alt_text='Scheduling Bot Panel',
-    #     template=ButtonsTemplate(
-    #         thumbnail_image_url='https://imgur.com/nXT75He.jpg',
-    #         title='Scheduling Bot',
-    #         text='請選擇您所需之功能',
-    #         actions=[
-    #             MessageTemplateAction(
-    #                 label='我要發起一個活動!',
-    #                 text='這邊就會跳出一個彈出式網頁'
-    #             ),
-    #             URITemplateAction(
-    #                 label='填寫時間!(這邊之後可以放產生的連結)',
-    #                 uri='https://www.youtube.com/'
-    #             )
-    #         ]
-    #     )
-    # )
-    # if user_message == "@bot":
-    #     line_bot_api.reply_message(event.reply_token, message)
-    # if user_message == "total":
-    #     line_bot_api.reply_message(event.reply_token, respond_message)
-
     if message == "botbot":
         FlexMessage = json.load(open('new_event.json', 'r', encoding='utf-8'))
         line_bot_api.reply_message(
@@ -107,19 +86,58 @@ def index():
 @app.route("/create-event", methods=["POST"])  # 路由和處理函式配對
 def create_event():
     if request.method == "POST":
-        print(request.values["event_name"])
-        print(request.values["date"])
-        print(request.values["start_time"])
-        print(request.values["end_time"])
-        print(request.values["anonymous"])
-        print(request.values["preference"])
-        print(request.values["deadline_date"])
-        print(request.values["deadline_time"])
+        '''event_attribute = []
+
+        length_of_string = 8
+        event_id = ''.join(random.SystemRandom().choice(
+            string.ascii_letters + string.digits) for _ in range(length_of_string))
+        event_attribute.append(event_id)
+        event_attribute.append(request.values["event_name"])
+
+        dates = []
+        for date in request.values["date"].split(','):
+            temp_date = date.split('-')
+            change_date = temp_date[2] + '-' + \
+                temp_date[1] + '-' + temp_date[0]
+            dates.append(change_date)
+        event_attribute.append(dates[0])
+        event_attribute.append(dates[1])
+
+        event_attribute.append(request.values["start_time"])
+        event_attribute.append(request.values["end_time"])
+
+        deadline_date = request.values["deadline_date"]
+        if request.values["deadline_date"] == '':
+            deadline_date = dates[0]
+        event_attribute.append(deadline_date)
+
+        deadline_time = request.values["deadline_time"]
+        if request.values["deadline_time"] == '':
+            deadline_time = request.values["start_time"]
+        event_attribute.append(deadline_time)
+
+        event_attribute.append(request.values["anonymous"])
+
+        preference = request.values["preference"]
+        if request.values["preference"] == '':
+            preference = 'all_ok'
+        event_attribute.append(preference)
+
+        # event_attribute.append(request.values["have_must_attend"])
+        event_attribute.append('false')
+
+        db_utils.insert_event(event_attribute)
+
+        # print * of table event
+        # db_utils.test()'''
+
         return "success"
     return redirect(url_for("index"))
 
 
 # don't touch this
 if __name__ == "__main__":
+    # db_utils.create_tables()
+    # db_utils.init_time()
     app.debug = True
     app.run()
