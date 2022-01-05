@@ -86,7 +86,7 @@ def index():
 @app.route("/create-event", methods=["POST"])  # 路由和處理函式配對
 def create_event():
     if request.method == "POST":
-        event_attribute = []
+        '''event_attribute = []
 
         length_of_string = 8
         event_id = ''.join(random.SystemRandom().choice(
@@ -129,7 +129,7 @@ def create_event():
         db_utils.insert_event(event_attribute)
 
         # print * of table event
-        # db_utils.test()
+        # db_utils.test()'''
 
         return "success"
     return redirect(url_for("index"))
