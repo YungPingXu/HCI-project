@@ -1,53 +1,64 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Scheduler</title>
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
     <link rel="stylesheet" href="/static/MultiDateSelect.css">
     <style>
-        *{
-			font-family: "Roboto";
-			color: black;
-		}
+        * {
+            font-family: "Roboto";
+            color: black;
+        }
+
         html {
-			min-height: 100%;
-			position: relative;
-		}
+            min-height: 100%;
+            position: relative;
+        }
+
         body {
-			margin: 0px;
-			padding: 0px;
-			min-height: 100%;
-		}
+            margin: 0px;
+            padding: 0px;
+            min-height: 100%;
+        }
+
         header {
-			text-align: center;
-			font-size: 35px;
-			padding-top: 35px;
-		}
+            text-align: center;
+            font-size: 35px;
+            padding-top: 35px;
+        }
+
         .middle {
             font-size: 25px;
-			margin: 0 auto;
-			margin-top: 20px;
-			width: 450px;
-		}
+            margin: 0 auto;
+            margin-top: 20px;
+            width: 450px;
+        }
+
         .middle-content {
             margin: 10px;
         }
+
         .input {
             font-size: 20px;
             border-radius: 10px;
-            background-color: #e1e1e1;;
+            background-color: #e1e1e1;
+            ;
             border: none;
             width: 300px;
             padding-left: 10px;
         }
+
         .small-input {
             font-size: 20px;
             border-radius: 10px;
-            background-color: #e1e1e1;;
+            background-color: #e1e1e1;
+            ;
             border: none;
             width: 130px;
             text-align: center;
         }
+
         .date-time {
             width: 300px;
             font-size: 20px;
@@ -60,31 +71,38 @@
             border: none;
             color: gray;
         }
+
         #more-button {
             background-color: white;
             margin-left: 10px;
             border-radius: 10px;
             border: none;
         }
+
         #more-button:hover {
             border: black 1px solid;
         }
+
         #more-content {
             padding-left: 30px;
         }
+
         .inner-content {
             margin: 15px;
             margin-left: 25px;
         }
+
         .check-box {
             width: 20px;
             height: 20px;
         }
+
         .submit-div {
-            display:block;
+            display: block;
             text-align: center;
             margin-top: 20px;
         }
+
         .submit-button {
             font-size: 25px;
             background-color: #83c1ff;
@@ -95,17 +113,21 @@
             padding-left: 25px;
             padding-right: 25px;
         }
-        .submit-button:hover{
+
+        .submit-button:hover {
             border: black 2px solid;
         }
+
         .note {
             font-size: 15px;
             margin-left: 20px;
         }
+
         .label-text {
             font-size: 20px;
             font-weight: normal;
         }
+
         #preference {
             margin-left: 20px;
         }
@@ -113,6 +135,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js'></script>
 </head>
+
 <body>
     <header>
         活動細節設定
@@ -120,110 +143,111 @@
     <section class="middle">
         <div class="middle-content">活動名稱：<input class="input" id="event-name">
         </div>
-        <div class="middle-content">日期選項：<input class="form-control date date-time" id="date" placeholder="Pick the multiple dates" readonly>
+        <div class="middle-content">日期選項：<input class="form-control date date-time" id="date"
+                placeholder="Pick the multiple dates" readonly>
         </div>
         <div class="middle-content">時段區間：
             <select class="small-input" id="start-time">
-                <option value="1">0:00</option>
-                <option value="2">0:30</option>
-                <option value="3">1:00</option>
-                <option value="4">1:30</option>
-                <option value="5">2:00</option>
-                <option value="6">2:30</option>
-                <option value="7">3:00</option>
-                <option value="8">3:30</option>
-                <option value="9">4:00</option>
-                <option value="10">4:30</option>
-                <option value="11">5:00</option>
-                <option value="12">5:30</option>
-                <option value="13">6:00</option>
-                <option value="14">6:30</option>
-                <option value="15">7:00</option>
-                <option value="16">7:30</option>
-                <option value="17">8:00</option>
-                <option value="18">8:30</option>
-                <option value="19">9:00</option>
-                <option value="20">9:30</option>
-                <option value="21">10:00</option>
-                <option value="22">10:30</option>
-                <option value="23">11:00</option>
-                <option value="24">11:30</option>
-                <option value="25">12:00</option>
-                <option value="26">12:30</option>
-                <option value="27">13:00</option>
-                <option value="28">13:30</option>
-                <option value="29">14:00</option>
-                <option value="30">14:30</option>
-                <option value="31">15:00</option>
-                <option value="32">15:30</option>
-                <option value="33">16:00</option>
-                <option value="34">16:30</option>
-                <option value="35">17:00</option>
-                <option value="36">17:30</option>
-                <option value="37">18:00</option>
-                <option value="38">18:30</option>
-                <option value="39">19:00</option>
-                <option value="40">19:30</option>
-                <option value="41">20:00</option>
-                <option value="42">20:30</option>
-                <option value="43">21:00</option>
-                <option value="44">21:30</option>
-                <option value="45">22:00</option>
-                <option value="46">22:30</option>
-                <option value="47">23:00</option>
-                <option value="48">23:30</option>
+                <option value="00:00">0:00</option>
+                <option value="00:30">0:30</option>
+                <option value="01:00">1:00</option>
+                <option value="01:30">1:30</option>
+                <option value="02:00">2:00</option>
+                <option value="02:30">2:30</option>
+                <option value="03:00">3:00</option>
+                <option value="03:30">3:30</option>
+                <option value="04:00">4:00</option>
+                <option value="04:30">4:30</option>
+                <option value="05:00">5:00</option>
+                <option value="05:30">5:30</option>
+                <option value="06:00">6:00</option>
+                <option value="06:30">6:30</option>
+                <option value="07:00">7:00</option>
+                <option value="07:30">7:30</option>
+                <option value="08:00">8:00</option>
+                <option value="08:30">8:30</option>
+                <option value="09:00">9:00</option>
+                <option value="09:30">9:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+                <option value="21:30">21:30</option>
+                <option value="22:00">22:00</option>
+                <option value="22:30">22:30</option>
+                <option value="23:00">23:00</option>
+                <option value="23:30">23:30</option>
             </select>
             ~
             <select class="small-input" id="end-time">
-                <option value="1">0:00</option>
-                <option value="2">0:30</option>
-                <option value="3">1:00</option>
-                <option value="4">1:30</option>
-                <option value="5">2:00</option>
-                <option value="6">2:30</option>
-                <option value="7">3:00</option>
-                <option value="8">3:30</option>
-                <option value="9">4:00</option>
-                <option value="10">4:30</option>
-                <option value="11">5:00</option>
-                <option value="12">5:30</option>
-                <option value="13">6:00</option>
-                <option value="14">6:30</option>
-                <option value="15">7:00</option>
-                <option value="16">7:30</option>
-                <option value="17">8:00</option>
-                <option value="18">8:30</option>
-                <option value="19">9:00</option>
-                <option value="20">9:30</option>
-                <option value="21">10:00</option>
-                <option value="22">10:30</option>
-                <option value="23">11:00</option>
-                <option value="24">11:30</option>
-                <option value="25">12:00</option>
-                <option value="26">12:30</option>
-                <option value="27">13:00</option>
-                <option value="28">13:30</option>
-                <option value="29">14:00</option>
-                <option value="30">14:30</option>
-                <option value="31">15:00</option>
-                <option value="32">15:30</option>
-                <option value="33">16:00</option>
-                <option value="34">16:30</option>
-                <option value="35">17:00</option>
-                <option value="36">17:30</option>
-                <option value="37">18:00</option>
-                <option value="38">18:30</option>
-                <option value="39">19:00</option>
-                <option value="40">19:30</option>
-                <option value="41">20:00</option>
-                <option value="42">20:30</option>
-                <option value="43">21:00</option>
-                <option value="44">21:30</option>
-                <option value="45">22:00</option>
-                <option value="46">22:30</option>
-                <option value="47">23:00</option>
-                <option value="48">23:30</option>
-              </select>
+                <option value="23:59">0:00</option>
+                <option value="00:29">0:30</option>
+                <option value="00:59">1:00</option>
+                <option value="01:29">1:30</option>
+                <option value="01:59">2:00</option>
+                <option value="02:29">2:30</option>
+                <option value="02:59">3:00</option>
+                <option value="03:29">3:30</option>
+                <option value="03:59">4:00</option>
+                <option value="04:29">4:30</option>
+                <option value="04:59">5:00</option>
+                <option value="05:29">5:30</option>
+                <option value="05:59">6:00</option>
+                <option value="06:29">6:30</option>
+                <option value="06:59">7:00</option>
+                <option value="07:29">7:30</option>
+                <option value="07:59">8:00</option>
+                <option value="08:29">8:30</option>
+                <option value="08:59">9:00</option>
+                <option value="09:29">9:30</option>
+                <option value="09:59">10:00</option>
+                <option value="10:29">10:30</option>
+                <option value="10:59">11:00</option>
+                <option value="11:29">11:30</option>
+                <option value="11:59">12:00</option>
+                <option value="12:29">12:30</option>
+                <option value="12:59">13:00</option>
+                <option value="13:29">13:30</option>
+                <option value="13:59">14:00</option>
+                <option value="14:29">14:30</option>
+                <option value="14:59">15:00</option>
+                <option value="15:29">15:30</option>
+                <option value="15:59">16:00</option>
+                <option value="16:29">16:30</option>
+                <option value="16:59">17:00</option>
+                <option value="17:29">17:30</option>
+                <option value="17:59">18:00</option>
+                <option value="18:29">18:30</option>
+                <option value="18:59">19:00</option>
+                <option value="19:29">19:30</option>
+                <option value="19:59">20:00</option>
+                <option value="20:29">20:30</option>
+                <option value="20:59">21:00</option>
+                <option value="21:29">21:30</option>
+                <option value="21:59">22:00</option>
+                <option value="22:29">22:30</option>
+                <option value="22:59">23:00</option>
+                <option value="23:29">23:30</option>
+            </select>
         </div>
     </section>
     <section class="middle">
@@ -237,9 +261,9 @@
                 <div id="preference-content" style="display: none;">
                     <span class="note">*當有多個時段吻合,系統將依據您的偏好選出最佳時段</span>
                     <input type="radio" id="preference" name="preference" value="early">
-                    <label for="early" class="label-text">早一點</label>
-                    <input type="radio" id="preference" name="preference" value="late">
-                    <label for="late" class="label-text">晚一點</label>
+                      <label for="early" class="label-text">早一點</label>
+                      <input type="radio" id="preference" name="preference" value="late">
+                      <label for="late" class="label-text">晚一點</label>
                 </div>
             </div>
             <div class="inner-content">
@@ -269,10 +293,10 @@
             var x = document.getElementById("more-content");
             if (x.style.display === "none") {
                 x.style.display = "block";
-                document.getElementById("more-button").innerHTML="&#9650 更多設定"
+                document.getElementById("more-button").innerHTML = "&#9650 更多設定"
             } else {
                 x.style.display = "none";
-                document.getElementById("more-button").innerHTML="&#9660 更多設定"
+                document.getElementById("more-button").innerHTML = "&#9660 更多設定"
             }
         }
         function deadline() {
@@ -307,15 +331,15 @@
             var anonymous = document.getElementById("anonymous").checked;
             var prelist = document.getElementsByName("preference");
             var preference = "";
-            for(i = 0; i < prelist.length; i++) {
-                if(prelist[i].checked)
+            for (i = 0; i < prelist.length; i++) {
+                if (prelist[i].checked)
                     preference = prelist[i].value;
             }
             var deadline_date = document.getElementById("deadline-date").value;
             var deadline_time = document.getElementById("deadline-time").value;
             var result = "event_name=" + event_name + "&date=" + date + "&start_time=" + start_time
-            + "&endtime=" + end_time + "&anonymous=" + anonymous + "&preference=" + preference
-            + "&deadline_date=" + deadline_date + "&deadlinetime=" + deadline_time;
+                + "&endtime=" + end_time + "&anonymous=" + anonymous + "&preference=" + preference
+                + "&deadline_date=" + deadline_date + "&deadlinetime=" + deadline_time;
             var data = new FormData();
             data.append("event_name", event_name);
             data.append("date", date);
@@ -336,4 +360,5 @@
         }
     </script>
 </body>
+
 </html>
