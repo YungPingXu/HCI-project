@@ -1,1 +1,1 @@
-web: gunicorn index:app –log-file -
+web: gunicorn index:app –log-file - --pythonpath SlackBot
