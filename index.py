@@ -25,6 +25,8 @@ handler = WebhookHandler(webhook_token)
 
 # don't touch this
 # listen all the post request from /callback
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -40,6 +42,8 @@ def callback():
     return 'OK'
 
 # this event will be triggered when someone send a message in a group
+
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     #user_id = event.source.user_id
@@ -51,13 +55,16 @@ def handle_message(event):
 
     if message == "botbot":
         FlexMessage = json.load(open('new_event.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(
+            event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "botdone":
-        FlexMessage = json.load(open('attend_event.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        FlexMessage = json.load(
+            open('attend_event.json', 'r', encoding='utf-8'))
+        line_bot_api.reply_message(
+            event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "hihi":
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="I'm here !! :)"))
-
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text="I'm here !! :)"))
 
 
 # this event will be triggered when the bot is invited to a group
@@ -84,7 +91,7 @@ def create_event():
         length_of_string = 8
         event_id = ''.join(random.SystemRandom().choice(
             string.ascii_letters + string.digits) for _ in range(length_of_string))
-        event_attribute.append(event_id)  # need modify
+        event_attribute.append(event_id)
         event_attribute.append(request.values["event_name"])
 
         dates = []
@@ -122,7 +129,7 @@ def create_event():
         db_utils.insert_event(event_attribute)
 
         # print * of table event
-        db_utils.test()
+        # db_utils.test()
 
         return "success"
     return redirect(url_for("index"))
