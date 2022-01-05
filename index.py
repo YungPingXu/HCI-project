@@ -4,7 +4,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 from linebot.models import FlexSendMessage, TextSendMessage
 from dotenv import load_dotenv
-from ..database import db_utils
+from database import db_utils
 
 import os
 import json
