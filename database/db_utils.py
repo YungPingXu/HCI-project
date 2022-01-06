@@ -318,6 +318,17 @@ def insert_people(user_attribute):
     conn.close()
 
 
+def arbitrate(event_id):
+    '''
+        This function arbitrates an event.
+        Input:
+            event_id: string
+        Output:
+
+    '''
+    return
+
+
 def init_time():
     '''
         This function initializes table time.
