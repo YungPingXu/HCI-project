@@ -81,10 +81,10 @@ def insert_event(event_attribute):
     event_name = event_attribute[1]
     start_date = event_attribute[2]
     end_date = event_attribute[3]
-    start_time = event_attribute[4]
-    end_time = event_attribute[5]
+    start_time = event_attribute[4] + ':00'
+    end_time = event_attribute[5] + ':00'
     deadline_date = event_attribute[6]
-    deadline_time = event_attribute[7]
+    deadline_time = event_attribute[7] + ':00'
 
     anonymous = False
     if event_attribute[8] == 'true':
