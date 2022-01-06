@@ -157,7 +157,7 @@ def mention(time_date_now):
         Input:
             time_date_now: list
         Output:
-            mention_user: list
+            mention_user: list, [{'user_id':__, 'event_id':__, 'group_id':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -175,12 +175,14 @@ def mention(time_date_now):
         AND done = False;
     """ % (time_now, date_now))
 
-    # mention_user: (user_id, event_id, group_id)
     mention_user = []
-
+    usr = {}
     rows = cur.fetchall()
     for row in rows:
-        mention_user.append((row[0], row[1], row[2]))
+        usr['user_id'] = row[0]
+        usr['event_id'] = row[1]
+        usr['group_id'] = row[2]
+        mention_user.append(usr)
 
     conn.close()
 
@@ -193,7 +195,7 @@ def result_sofar(event_id):
         Input:
             event_id: string
         Output:
-            result: list
+            result: list, [{'time_id':__, 'count(time_id)':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -207,9 +209,12 @@ def result_sofar(event_id):
     """ % (event_id))
 
     rows = cur.fetchall()
-    result = []  # (time_id, count(time_id))
+    result = []
     for row in rows:
-        result.append([row[0], row[1]])
+        time_section = {}
+        time_section['time_id'] = row[0]
+        time_section['count(time_id)'] = row[1]
+        result.append(time_section)
 
     conn.close()
 
@@ -222,7 +227,10 @@ def result_final(deadline):
         Input:
             deadline: list
         Output:
-            result: list
+            result: list, contains below three parameters
+                event_id: string
+                event_time_result: list, [{'time_id':__, 'count(time_id)':__},...,{}]
+                event_time_user: list, [{'time_id':__, 'user_id':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -250,21 +258,29 @@ def result_final(deadline):
 
         rows = cur.fetchall()
         times = []
+        event_time_result = []
         for row in rows:
+            time_section = {}
+            time_section['time_id'] = row[0]
+            time_section['count(time_id)'] = row[1]
+            event_time_result.append(time_section)
             times.append([row[0], row[1]])
 
-        time_user = []
+        event_time_user = []
         for time_roll in times:
             time_id = time_roll[0]
             cur.execute("""
                 SELECT user_id FROM choose 
                 WHERE event_id = '%s' AND time_id = %s; 
             """ % (event_id, time_id))
+            user_choose_time = {}
             rows = cur.fetchall()
             for row in rows:
-                time_user.append([time_id, row[0]])
+                user_choose_time['time_id'] = time_id
+                user_choose_time['user_id'] = row[0]
+                event_time_user.append(user_choose_time)
 
-        result.append((event_id, time_user))
+        result.append([event_id, event_time_result, event_time_user])
 
     conn.close()
 
@@ -304,7 +320,7 @@ def insert_people(user_attribute):
 
 def init_time():
     '''
-        This function initializes table time;
+        This function initializes table time.
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
