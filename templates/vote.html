@@ -119,15 +119,15 @@
                 {% for date in result.date_list %}
                     <td class="grid">{{date}}</td>
                 {% endfor %}
-              </tr>
-            <tr>
-                {% for time in result.time_list %}
+            </tr>
+            {% for time in result.time_list %}
+                <tr>
                     <td class="time-grid">{{time.0}}</td>
                     {% for date in result.date_list %}
                         <td class="select-grid"><input type="checkbox" class="selector" value="{{date}},{{time.1}}"></td>
                     {% endfor %}
-                {% endfor %}
-            </tr>
+                </tr>
+            {% endfor %}
         </table>
     </div>
     <div class="submit-div">
