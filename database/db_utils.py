@@ -62,6 +62,13 @@ def create_tables():
                 time_start time,
                 time_end time
             );
+
+            DROP TABLE IF EXISTS member_list;
+            CREATE TABLE member_list(
+                user_id varchar(50) PRIMARY KEY,
+                user_name varchar(50),
+                group_id varchar(50)
+            );
         """)
 
     conn.commit()
@@ -496,6 +503,7 @@ def select_event_id(event_id):
         event_attribute['start_time'] = str(row[4])
         event_attribute['end_time'] = str(row[5])
         event_attribute['anonymous'] = row[8]
+        event_attribute['group_id'] = row[11]
 
     conn.commit()
     conn.close()
@@ -562,4 +570,36 @@ def select_people(group_id):
 
     return group_member
 
-print(result_sofar("8dycYMMo"))
+def insert_member(user_id, user_name, group_id):
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO member_list VALUES ('%s', '%s', '%s');
+    """ % (user_id, user_name, group_id))
+
+    conn.commit()
+    conn.close()
+
+def get_members(group_id):
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT user_id, user_name FROM member_list
+        WHERE group_id = '%s';
+    """ % (group_id))
+
+    member_list = []
+    rows = cur.fetchall()
+    for row in rows:
+        member = []
+        member.append(row[0])
+        member.append(row[1])
+        member_list.append(member)
+
+    conn.commit()
+    conn.close()
+    return member_list

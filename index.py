@@ -81,8 +81,13 @@ def handle_join(event):
 
 @app.route("/", methods=["GET"])  # 路由和處理函式配對
 def index():
-    return render_template("index.html")
-
+    if request.method == "GET":
+        if "group_id" in request.values:
+            group_id = request.values["group_id"]
+            return render_template("index.html", group_id=group_id)
+        else:
+            return redirect("/?group_id=C36e166f739d14fffbd20c0ce7c772eef")
+    return ""
 
 @app.route("/create-event", methods=["POST"])  # 路由和處理函式配對
 def create_event():
@@ -128,7 +133,7 @@ def create_event():
         # event_attribute.append(request.values["have_must_attend"])
         event_attribute.append('false')
 
-        # event_attribute.append(request.values["group_id"])
+        event_attribute.append(request.values["group_id"])
         event_attribute.append('none')
 
         db_utils.insert_event(event_attribute)
@@ -201,6 +206,7 @@ def vote():
                 result = {}
                 result["event_id"] = event_attribute["event_id"]
                 result["event_name"] = event_attribute['event_name']
+                result["member_list"] = db_utils.get_members(event_attribute['group_id'])
                 result["date_list"] = []
 
                 current_date = event_attribute["start_date"]

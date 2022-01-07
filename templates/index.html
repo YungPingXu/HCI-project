@@ -140,6 +140,7 @@
 <body>
     <header>
         活動細節設定
+        <input type="text" id="group_id" value="{{group_id}}" hidden>
     </header>
     <section class="middle">
         <div class="middle-content">活動名稱：<input class="input" id="event-name">
@@ -338,9 +339,10 @@
             }
             var deadline_date = document.getElementById("deadline-date").value;
             var deadline_time = document.getElementById("deadline-time").value;
+            var group_id = document.getElementById("group_id").value;
             var result = "event_name=" + event_name + "&date=" + date + "&start_time=" + start_time
                 + "&endtime=" + end_time + "&anonymous=" + anonymous + "&preference=" + preference
-                + "&deadline_date=" + deadline_date + "&deadlinetime=" + deadline_time;
+                + "&deadline_date=" + deadline_date + "&deadlinetime=" + deadline_time + "&group_id=" + group_id;
             var data = new FormData();
             data.append("event_name", event_name);
             data.append("date", date);
@@ -350,6 +352,7 @@
             data.append("preference", preference);
             data.append("deadline_date", deadline_date);
             data.append("deadline_time", deadline_time);
+            data.append("group_id", group_id);
 
             console.log(result);
             var request = new XMLHttpRequest();

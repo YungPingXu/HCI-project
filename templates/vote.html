@@ -107,11 +107,10 @@
     <div class="upper">
         <select class="input" id="member">
             <option value="" disabled selected hidden>Your Name</option>
-            <option value="1">許永平</option>
-            <option value="2">吳佳真</option>
-            <option value="3">Jonathan</option>
-            <option value="4">陳昱瑋</option>
-            <!-- this value is the corresponding user_id -->
+            {% for member in member_list %}
+                <option value="{{member.0}}">{{member.1}}</option>
+                <!-- this value is the corresponding user_id -->
+            {% endfor %}
         </select>
         <br>
         <span class="note">＊點擊按鈕選擇有空的時段</span>
