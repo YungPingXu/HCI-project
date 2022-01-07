@@ -98,15 +98,29 @@ def insert_event(event_attribute):
         have_must_attend = True
 
     group_id = event_attribute[11]
-    
-    # test
-    print("""
-        INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s, '%s');
-    """ % (event_id, event_name, start_date, end_date, start_time, end_time, deadline_date, deadline_time, anonymous, preference, have_must_attend, group_id))
 
     cur.execute("""
         INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s, '%s');
     """ % (event_id, event_name, start_date, end_date, start_time, end_time, deadline_date, deadline_time, anonymous, preference, have_must_attend, group_id))
+
+    conn.commit()
+    conn.close()
+
+
+def update_people_done(user_id):
+    '''
+        This function updates table people if a person voted.
+        Input:
+            user_id: string
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute('''
+        UPDATE people SET done = True
+        WHERE user_id = '%s';
+    ''' % (user_id))
 
     conn.commit()
     conn.close()
@@ -124,7 +138,9 @@ def insert_choose(user_choose):
 
     user_id = user_choose[0]
     event_id = user_choose[1]
-    choose_date = user_choose[2]
+    choose_date_raw = user_choose[2].split('/')
+    choose_date = '2022-' + \
+        choose_date_raw[0] + '-' + choose_date_raw[1]  # need modify
     choose_time_id = int(user_choose[3])  # string to integer
 
     cur.execute("""
@@ -203,26 +219,31 @@ def result_sofar(event_id):
         Input:
             event_id: string
         Output:
-            result: list, [{'time_id':__, 'count(time_id)':__},...,{}]
+            result: list, [{'choose_date':__, 'choose_time_id':__, 'count':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT time_id, count(time_id) FROM choose 
+        SELECT choose_date, choose_time_id FROM choose 
         WHERE event_id = '%s' 
-        GROUP BY time_id
-        ORDER by count(time_id) DESC;
     """ % (event_id))
 
     rows = cur.fetchall()
     result = []
     for row in rows:
-        time_section = {}
-        time_section['time_id'] = row[0]
-        time_section['count(time_id)'] = row[1]
-        result.append(time_section)
+        find = False
+        for re in result:
+            if re['choose_date'] == row[0] and re['choose_time_id'] == row[1]:
+                re['count'] += 1
+                find = True
+        if find == False:
+            time_section = {}
+            time_section['choose_date'] = row[0]
+            time_section['choose_time_id'] = row[1]
+            time_section['count'] = 1
+            result.append(time_section)
 
     conn.close()
 
@@ -237,8 +258,8 @@ def result_final(deadline):
         Output:
             result: list, contains below three parameters
                 event_id: string
-                event_time_result: list, [{'time_id':__, 'count(time_id)':__},...,{}]
-                event_time_user: list, [{'time_id':__, 'user_id':__},...,{}]
+                event_time_result: list, [{'date':__, 'time_id':__, 'count':__},...,{}]
+                event_time_user: list, [{'user_id':__, 'choose_date':__, 'choose_time_id':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -258,35 +279,38 @@ def result_final(deadline):
         event_id = event[0]
 
         cur.execute("""
-            SELECT time_id, count(time_id) FROM choose 
+            SELECT choose_date, choose_time_id FROM choose 
             WHERE event_id = '%s' 
-            GROUP BY time_id
-            ORDER by count(time_id) DESC;
         """ % (event_id))
 
         rows = cur.fetchall()
-        times = []
         event_time_result = []
         for row in rows:
-            time_section = {}
-            time_section['time_id'] = row[0]
-            time_section['count(time_id)'] = row[1]
-            event_time_result.append(time_section)
-            times.append([row[0], row[1]])
+            find = False
+            for re in event_time_result:
+                if re['date'] == row[0] and re['time_id'] == row[1]:
+                    re['count'] += 1
+                    find = True
+            if find == False:
+                time_section = {}
+                time_section['date'] = row[0]
+                time_section['time_id'] = row[1]
+                time_section['count'] = 1
+                event_time_result.append(time_section)
 
+        cur.execute("""
+            SELECT user_id, choose_date, choose_time_id FROM choose 
+            WHERE event_id = '%s'; 
+        """ % (event_id))
+
+        rows = cur.fetchall()
         event_time_user = []
-        for time_roll in times:
-            time_id = time_roll[0]
-            cur.execute("""
-                SELECT user_id FROM choose 
-                WHERE event_id = '%s' AND time_id = %s; 
-            """ % (event_id, time_id))
-            user_choose_time = {}
-            rows = cur.fetchall()
-            for row in rows:
-                user_choose_time['time_id'] = time_id
-                user_choose_time['user_id'] = row[0]
-                event_time_user.append(user_choose_time)
+        for row in rows:
+            user_choose = {}
+            user_choose['user_id'] = row[0]
+            user_choose['choose_date'] = row[1]
+            user_choose['choose_time_id'] = row[2]
+            event_time_user.append(user_choose)
 
         result.append([event_id, event_time_result, event_time_user])
 
@@ -409,7 +433,7 @@ def init_time():
 
 def select_event(group_id):
     '''
-        This function returns the content of table event.
+        This function returns the content of table event using group_id.
         Input:
             group_id: string
         Output:
@@ -445,10 +469,10 @@ def select_event(group_id):
 
     return event_attribute
 
-# select_event function using event_id
+
 def select_event_id(event_id):
     '''
-        This function returns the content of table event.
+        This function returns the content of table event using event_id.
         Input:
             event_id: string
         Output:
@@ -480,6 +504,7 @@ def select_event_id(event_id):
 
     return event_attribute
 
+
 def select_time(time_id):
     '''
         This function returns time_start and time_end of an time_id.
@@ -508,4 +533,33 @@ def select_time(time_id):
 
     return time_slot
 
-select_event_id("dzdt5LLr")
+
+def select_people(group_id):
+    '''
+        This function returns members of a group.
+        Input:
+            group_id: string
+        Output:
+            group_member: list, [{'user_id':__, 'user_name':__},...,{}]
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT user_id, user_name FROM people
+        WHERE group_id = '%s';
+    """ % (group_id))
+
+    group_member = []
+    rows = cur.fetchall()
+    for row in rows:
+        member = {}
+        member['user_id'] = row[0]
+        member['user_name'] = row[1]
+        group_member.append(member)
+
+    conn.commit()
+    conn.close()
+
+    return group_member
