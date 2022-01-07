@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>投票 - {{result.event_name}}</title>
+    <title>投票情況 - {{result.event_name}}</title>
     <style>
         * {
             font-family: "Roboto";
@@ -41,16 +41,16 @@
             width: 300px;
             padding-left: 10px;
         }
-        .selector {
+        .grid-div {
             border-radius: 10px;
             background-color: gray;
-            width: 60px;
-            height: 60px;
-            appearance: none;
-        }
-        .selector:checked {
-            appearance: auto;
-            border-radius: 10px;
+            width: 65px;
+            height: 65px;
+            margin: 5px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 65px; /* The same as your div height */
+            font-size: 25px;
         }
         .selector-div {
             font-size: 20px;
@@ -91,29 +91,22 @@
             padding-left: 25px;
             padding-right: 25px;
         }
-        .submit-button:hover {
-            border: black 2px solid;
-        }
     </style>
 </head>
 
-<body>
+<body onload="initialize();">
     <header>
         {{result.event_name}}
         <input type="text" id="event-id" value="{{result.event_id}}" hidden>
         <!-- this value is to record event_id -->
     </header>
     <div class="upper">
-        <select class="input" id="member">
-            <option value="" disabled selected hidden>Your Name</option>
-            <option value="1">許永平</option>
-            <option value="2">吳佳真</option>
-            <option value="3">Jonathan</option>
-            <option value="4">陳昱瑋</option>
-            <!-- this value is the corresponding user_id -->
-        </select>
-        <br>
-        <span class="note">＊點擊按鈕選擇有空的時段</span>
+        尚有 3 人未投票
+        <div style="display: none;" id="vote_info">
+            {% for i in result.display_vote %}
+                <input type="text" class="vote_info" value="{{i}}" hidden>
+            {% endfor %}
+        </div>
     </div>
     <div class="selector-div">
         <table style="border-collapse:separate; border-spacing:10px 0px;">
@@ -127,46 +120,27 @@
                 <tr>
                     <td class="time-grid">{{time.0}}</td>
                     {% for date in result.date_list %}
-                        <td class="select-grid"><input type="checkbox" class="selector" value="{{date.1}},{{time.1}}"></td>
+                        <td class="select-grid"><div class="grid-div" id="{{date.1}},{{time.1}}"><div></td>
                     {% endfor %}
                 </tr>
             {% endfor %}
         </table>
     </div>
     <div class="submit-div">
-        <button class="submit-button" onclick="submit()">確定送出</button>
+        <button class="submit-button" onclick="modify_vote()">我要修改</button>
     </div>
     <script>
-        function submit() {
-            var user_id = document.getElementById("member").value;
+        function modify_vote() {
             var event_id = document.getElementById("event-id").value;
-            var selected_time = "";
-            var x = document.getElementsByClassName("selector");
-            for (var i = 0; i < x.length; i++) {
-                if(x[i].type == "checkbox"){
-                    if(x[i].checked == true) {
-                        selected_time += x[i].value + ";";
-                    }
-                }
+            window.location.href = "/vote?event_id=" + event_id;
+        }
+        function initialize() {
+            var vote_info = document.getElementsByClassName("vote_info");
+            for(var i = 0; i < vote_info.length; i++) {
+                var tmp = vote_info[i].value.split(",");
+                var x = document.getElementById(tmp[0] + "," + tmp[1]).innerHTML = tmp[2];
+                document.getElementById(tmp[0] + "," + tmp[1]).style.backgroundColor = "#4f88f8";
             }
-            console.log(selected_time);
-            var result = "user_id=" + user_id + "&event_id=" + event_id + "&selected_time=" + selected_time;
-            var data = new FormData();
-            data.append("user_id", user_id);
-            data.append("event_id", event_id);
-            data.append("selected_time", selected_time);
-
-            console.log(result);
-            var request = new XMLHttpRequest();
-            request.onload = function() {
-                if(request.status == 200) {
-                    alert(request.responseText);
-                }else{
-                    alert("Error!");
-                }
-            }
-            request.open("POST", "/send_vote");
-            request.send(data);
         }
     </script>
 </body>
