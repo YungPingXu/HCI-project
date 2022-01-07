@@ -471,10 +471,10 @@ def select_event_id(event_id):
         event_attribute['event_name'] = row[1]
         event_attribute['start_date'] = str(row[2])
         event_attribute['end_date'] = str(row[3])
-        event_attribute['start_time'] = time.strftime(row[4], '%H:%M')
-        event_attribute['end_time'] = time.strftime(row[5], '%H:%M')
-        event_attribute['deadline_date'] = time.strftime(row[6], '%Y-%m-%d')
-        event_attribute['deadline_time'] = time.strftime(row[7], '%H:%M:%S')
+        event_attribute['start_time'] = str(row[4])
+        event_attribute['end_time'] = str(row[5])
+        #event_attribute['deadline_date'] = time.strftime(row[6], '%Y-%m-%d')
+        #event_attribute['deadline_time'] = time.strftime(row[7], '%H:%M:%S')
         event_attribute['anonymous'] = row[8]
         event_attribute['preference'] = row[9]
         event_attribute['have_must_attend'] = row[10]
