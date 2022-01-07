@@ -332,5 +332,6 @@ def display_vote():
 if __name__ == "__main__":
     db_utils.create_tables()
     db_utils.init_time()
+    db_utils.init_member_list()
     app.debug = True
     app.run()

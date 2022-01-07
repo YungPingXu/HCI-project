@@ -11,6 +11,15 @@ user = os.getenv("user")
 password = os.getenv("password")
 host = os.getenv("host")
 port = os.getenv("port")
+user1_id = os.getenv("user1_id")
+user1_name = os.getenv("user1_name")
+user1_group_id = os.getenv("user1_group_id")
+user2_id = os.getenv("user2_id")
+user2_name = os.getenv("user2_name")
+user2_group_id = os.getenv("user2_group_id")
+user3_id = os.getenv("user3_id")
+user3_name = os.getenv("user3_name")
+user3_group_id = os.getenv("user3_group_id")
 ###################
 
 
@@ -575,9 +584,12 @@ def insert_member(user_id, user_name, group_id):
                             password=password, host=host, port=port)
     cur = conn.cursor()
 
-    cur.execute("""
-        INSERT INTO member_list VALUES ('%s', '%s', '%s');
-    """ % (user_id, user_name, group_id))
+    try:
+        cur.execute("""
+            INSERT INTO member_list VALUES ('%s', '%s', '%s');
+        """ % (user_id, user_name, group_id))
+    except:
+        pass
 
     conn.commit()
     conn.close()
@@ -603,3 +615,8 @@ def get_members(group_id):
     conn.commit()
     conn.close()
     return member_list
+
+def init_member_list():
+    insert_member(user1_id, user1_name, user1_group_id)
+    insert_member(user2_id, user2_name, user2_group_id)
+    insert_member(user3_id, user3_name, user3_group_id)
