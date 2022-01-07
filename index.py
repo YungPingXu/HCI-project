@@ -189,40 +189,49 @@ time_mapping = {
 
 @app.route("/vote", methods=["GET"])  # 路由和處理函式配對
 def vote():
-    event_attribute = db_utils.select_event_id(request.values["event_id"])
-    result = {}
-    result["event_id"] = event_attribute["event_id"]
-    result["event_name"] = event_attribute['event_name']
-    result["date_list"] = []
+    if request.method == "GET":
+        if "event_id" in request.values:
+            event_attribute = db_utils.select_event_id(request.values["event_id"])
+            if event_attribute:
+                result = {}
+                result["event_id"] = event_attribute["event_id"]
+                result["event_name"] = event_attribute['event_name']
+                result["date_list"] = []
 
-    current_date = event_attribute["start_date"]
-    weekdays = ["(一)", "(二)", "(三)", "(四)", "(五)", "(六)", "(日)"]
-    current_day = weekdays[datetime.datetime.strptime(current_date, "%Y-%m-%d").isoweekday() - 1]
-    # 星期幾
-    while True:
-        tmp = current_date.split("-")
-        result["date_list"].append(tmp[1] + "/" + tmp[2] + current_day)
-        if current_date == event_attribute["end_date"]:
-            break
-        next_date = datetime.datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
-        current_day = weekdays[next_date.isoweekday() - 1]
-        current_date = next_date.strftime('%Y-%m-%d')
-    
-    result["time_list"] = []
-    current_time = event_attribute["start_time"]
-    end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
-    end_time = end_time.strftime("%H:%M:%S")
-    while current_time != end_time:
-        tmp = current_time.split(":")
-        tmplist = []
-        tmplist.append(tmp[0] + ":" + tmp[1])
-        tmplist.append(time_mapping[tmp[0] + ":" + tmp[1]])
-        result["time_list"].append(tmplist)
-        next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
-        current_time = next_time.strftime("%H:%M:%S")
-    result["start_time"] = event_attribute["start_time"]
-    result["end_time"] = event_attribute["end_time"]
-    return render_template("vote.html", result=result)
+                current_date = event_attribute["start_date"]
+                weekdays = ["(一)", "(二)", "(三)", "(四)", "(五)", "(六)", "(日)"]
+                current_day = weekdays[datetime.datetime.strptime(current_date, "%Y-%m-%d").isoweekday() - 1]
+                # 星期幾
+                while True:
+                    tmp = current_date.split("-")
+                    result["date_list"].append(tmp[1] + "/" + tmp[2] + current_day)
+                    if current_date == event_attribute["end_date"]:
+                        break
+                    next_date = datetime.datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
+                    current_day = weekdays[next_date.isoweekday() - 1]
+                    current_date = next_date.strftime('%Y-%m-%d')
+
+                result["time_list"] = []
+                current_time = event_attribute["start_time"]
+                end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
+                end_time = end_time.strftime("%H:%M:%S")
+                while current_time != end_time:
+                    tmp = current_time.split(":")
+                    tmplist = []
+                    tmplist.append(tmp[0] + ":" + tmp[1])
+                    tmplist.append(time_mapping[tmp[0] + ":" + tmp[1]])
+                    result["time_list"].append(tmplist)
+                    next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
+                    current_time = next_time.strftime("%H:%M:%S")
+                result["start_time"] = event_attribute["start_time"]
+                result["end_time"] = event_attribute["end_time"]
+                return render_template("vote.html", result=result)
+            else:
+                "this event_id does not exist"
+        else:
+            return "event_id parameter does not exist"
+    else:
+        return redirect(url_for("index"))
 
 # don't touch this
 if __name__ == "__main__":
