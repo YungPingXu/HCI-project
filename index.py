@@ -159,7 +159,7 @@ def vote():
     
     result["time_list"] = []
     current_time = event_attribute["start_time"]
-    end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=30)
+    end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
     end_time = end_time.strftime("%H:%M:%S")
     while True:
         tmp = current_time.split(":")
