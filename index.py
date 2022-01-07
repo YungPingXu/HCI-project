@@ -227,7 +227,7 @@ def vote():
                 result["end_time"] = event_attribute["end_time"]
                 return render_template("vote.html", result=result)
             else:
-                "this event_id does not exist"
+                return "this event_id does not exist"
         else:
             return "event_id parameter does not exist"
     else:
