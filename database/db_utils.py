@@ -42,7 +42,8 @@ def create_tables():
                 deadline_time time,
                 anonymous boolean,
                 preference varchar(50),
-                have_must_attend boolean
+                have_must_attend boolean,
+                group_id varchar(50)
             );
 
             DROP TABLE IF EXISTS people;
@@ -96,9 +97,11 @@ def insert_event(event_attribute):
     if event_attribute[10] == 'true':
         have_must_attend = True
 
+    group_id = event_attribute[11]
+
     cur.execute("""
-        INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s);
-    """ % (event_id, event_name, start_date, end_date, start_time, end_time, deadline_date, deadline_time, anonymous, preference, have_must_attend))
+        INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s, '%s');
+    """ % (event_id, event_name, start_date, end_date, start_time, end_time, deadline_date, deadline_time, anonymous, preference, have_must_attend, group_id))
 
     conn.commit()
     conn.close()
@@ -326,6 +329,13 @@ def arbitrate(event_id):
         Output:
 
     '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+    cur.execute("""
+    """)
+    conn.commit()
+    conn.close()
     return
 
 
@@ -392,21 +402,69 @@ def init_time():
     conn.close()
 
 
-def test():
+def select_event(group_id):
     '''
-        This function is just for test.
+        This function returns the content of table event.
+        Input:
+            group_id: string
+        Output:
+            event_attribute: dict
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
 
     cur.execute("""
-        select * from event;
-    """)
+        SELECT * FROM event
+        WHERE group_id = '%s';
+    """ % (group_id))
 
+    event_attribute = {}
     rows = cur.fetchall()
     for row in rows:
-        print(row)
+        event_attribute['event_id'] = row[0]
+        event_attribute['event_name'] = row[1]
+        event_attribute['start_date'] = time.strftime(row[2], '%Y-%m-%d')
+        event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
+        event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
+        event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
+        event_attribute['deadline_date'] = time.strftime(row[6], '%Y-%m-%d')
+        event_attribute['deadline_time'] = time.strftime(row[7], '%H:%M:%S')
+        event_attribute['anonymous'] = row[8]
+        event_attribute['preference'] = row[9]
+        event_attribute['have_must_attend'] = row[10]
+        event_attribute['group_id'] = row[11]
 
     conn.commit()
     conn.close()
+
+    return event_attribute
+
+
+def select_time(time_id):
+    '''
+        This function returns time_start and time_end of an time_id.
+        Input:
+            time_id: int
+        Output:
+            time_slot: dict
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT time_start, time_end FROM time
+        WHERE time_id = '%s';
+    """ % (time_id))
+
+    time_slot = {}
+    rows = cur.fetchall()
+    for row in rows:
+        time_slot['time_start'] = row[0]
+        time_slot['time_end'] = row[1]
+
+    conn.commit()
+    conn.close()
+
+    return time_slot
