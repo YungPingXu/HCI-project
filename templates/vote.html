@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{result.event_name}}</title>
+    <style>
+        * {
+            font-family: "Roboto";
+            color: black;
+        }
+
+        html {
+            min-height: 100%;
+            position: relative;
+        }
+
+        body {
+            margin: 0px;
+            padding: 0px;
+            min-height: 100%;
+        }
+
+        header {
+            text-align: center;
+            font-size: 35px;
+            padding-top: 35px;
+        }
+
+        .upper {
+            font-size: 25px;
+            margin: 0 auto;
+            margin-top: 20px;
+            width: 450px;
+            text-align: center;
+        }
+        .input {
+            font-size: 20px;
+            border-radius: 10px;
+            background-color: #e1e1e1;
+            border: none;
+            width: 300px;
+            padding-left: 10px;
+        }
+        .selector {
+            border-radius: 10px;
+            background-color: gray;
+            width: 60px;
+            height: 60px;
+            appearance: none;
+        }
+        .selector:checked {
+            appearance: auto;
+            border-radius: 10px;
+        }
+        .selector-div {
+            font-size: 20px;
+            margin: 0 auto;
+            margin-top: 10px;
+            padding: 10px;
+            text-align: center;
+            overflow: auto;
+            max-width: 350px;
+            height: 300px;
+            border: black 1px solid;
+        }
+        .select-grid {
+            width: 50px;
+            height: 50px;
+            padding-top: 20px;
+        }
+        .time-grid {
+            width: 50px;
+            height: 50px;
+            vertical-align: top;
+        }
+        .note {
+            font-size: 15px;
+        }
+        .submit-div {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .submit-button {
+            font-size: 25px;
+            background-color: #83c1ff;
+            border-radius: 10px;
+            border: none;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        HCI 開會
+        <input type="text" id="event-id" value="{{result.event_id}}" hidden>
+        <!-- this value is to record event_id -->
+    </header>
+    <div class="upper">
+        <select class="input" id="member">
+            <option value="" disabled selected hidden>Your Name</option>
+            <option value="1">許永平</option>
+            <option value="2">吳佳真</option>
+            <option value="3">Jonathan</option>
+            <option value="4">陳昱瑋</option>
+            <!-- this value is the corresponding user_id -->
+        </select>
+        <br>
+        <span class="note">＊點擊按鈕選擇有空的時段</span>
+    </div>
+    <div class="selector-div">
+        <table style="border-collapse:separate; border-spacing:10px 0px;">
+            <tr>
+                <td class="grid"></td>
+                {% for date in date_list %}
+                    <td class="grid">{{date}}</td>
+                {% endfor %}
+              </tr>
+            <tr>
+                <td class="time-grid">12:00</td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,25"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,25"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,25"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,25"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,25"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,25"></td>
+            </tr>
+            <tr>
+                <td class="time-grid">12:30</td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,26"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,26"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,26"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,26"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,26"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,26"></td>
+            </tr>
+            <tr>
+                <td class="time-grid">13:00</td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,27"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,27"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,27"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,27"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,27"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,27"></td>
+            </tr>
+            <tr>
+                <td class="time-grid">13:30</td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,28"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,28"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,28"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,28"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,28"></td>
+                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,28"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="submit-div">
+        <button class="submit-button" onclick="submit()">確定送出</button>
+    </div>
+    <script>
+        function submit() {
+            var user_id = document.getElementById("member").value;
+            var event_id = document.getElementById("event-id").value;
+            var selected_time = "";
+            var x = document.getElementsByClassName("selector");
+            for (var i = 0; i < x.length; i++) {
+                if(x[i].type == "checkbox"){
+                    if(x[i].checked == true) {
+                        selected_time += x[i].value;
+                        if(i != x.length - 1)
+                        selected_time += ";";
+                    }
+                }
+            }
+            var result = "user_id=" + user_id + "&event_id=" + event_id + "&selected_time=" + selected_time;
+            var data = new FormData();
+            data.append("user_id", user_id);
+            data.append("event_id", event_id);
+            data.append("selected_time", selected_time);
+
+            alert(result);
+            var request = new XMLHttpRequest();
+            request.onload = function() {
+                if(request.status == 200) {
+                    alert("成功送出!");
+                }else{
+                    alert("Error!");
+                }
+            }
+            request.open("POST", "/create-event");
+            request.send(data);
+        }
+    </script>
+</body>
+
+</html>

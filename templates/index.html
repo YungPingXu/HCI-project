@@ -352,9 +352,13 @@
 
             alert(result);
             var request = new XMLHttpRequest();
-            /* request.onload = function() {
-               document.getElementById("demo").innerHTML = this.responseText;
-            } */
+            request.onload = function() {
+                if(request.status == 200) {
+                    alert(request.responseText);
+                }else{
+                    alert("Error!");
+                }
+            }
             request.open("POST", "/create-event");
             request.send(data);
         }

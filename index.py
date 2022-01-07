@@ -6,6 +6,7 @@ from linebot.models import FlexSendMessage, TextSendMessage
 from dotenv import load_dotenv
 from database import db_utils
 
+import datetime
 import time
 import random
 import string
@@ -91,6 +92,7 @@ def create_event():
         length_of_string = 8
         event_id = ''.join(random.SystemRandom().choice(
             string.ascii_letters + string.digits) for _ in range(length_of_string))
+        print("event id is", event_id)
         event_attribute.append(event_id)
         event_attribute.append(request.values["event_name"])
 
@@ -131,9 +133,29 @@ def create_event():
 
         db_utils.insert_event(event_attribute)
 
-        return "success"
+        return event_id
     return redirect(url_for("index"))
 
+
+@app.route("/event_id", methods=["GET"])  # 路由和處理函式配對
+def vote():
+    event_attribute = db_utils.select_event_id(request.values["event_id"])
+    result = {}
+    result["event_id"] = event_attribute["event_id"]
+    result["event_name"] = event_attribute['event_name']
+    result["date_list"] = []
+
+    current_date = event_attribute["start_date"]
+    while True:
+        result["date_list"].append(time.strftime(current_date, "%m/%d"))
+        if current_date == event_attribute["end_date"]:
+            break
+        current_date = current_date + datetime.timedelta(days=1)
+
+    #event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
+    #event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
+    #event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
+    return render_template("vote.html", result=result)
 
 # don't touch this
 if __name__ == "__main__":

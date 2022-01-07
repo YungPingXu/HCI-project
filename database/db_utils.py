@@ -440,6 +440,47 @@ def select_event(group_id):
 
     return event_attribute
 
+# select_event function using event_id
+def select_event_id(event_id):
+    '''
+        This function returns the content of table event.
+        Input:
+            event_id: string
+        Output:
+            event_attribute: dict
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT * FROM event
+        WHERE event_id = '%s';
+    """ % (event_id))
+
+    event_attribute = {}
+    rows = cur.fetchall()
+    for row in rows:
+        event_attribute['event_id'] = row[0]
+        event_attribute['event_name'] = row[1]
+        #event_attribute['start_date'] = time.strftime(row[2], '%Y-%m-%d')
+        #event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
+        event_attribute['start_date'] = row[2]
+        event_attribute['end_date'] = row[3]
+        
+        event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
+        event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
+        event_attribute['deadline_date'] = time.strftime(row[6], '%Y-%m-%d')
+        event_attribute['deadline_time'] = time.strftime(row[7], '%H:%M:%S')
+        event_attribute['anonymous'] = row[8]
+        event_attribute['preference'] = row[9]
+        event_attribute['have_must_attend'] = row[10]
+        event_attribute['group_id'] = row[11]
+
+    conn.commit()
+    conn.close()
+
+    return event_attribute
 
 def select_time(time_id):
     '''
