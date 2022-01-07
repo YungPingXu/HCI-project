@@ -92,7 +92,7 @@ def create_event():
         length_of_string = 8
         event_id = ''.join(random.SystemRandom().choice(
             string.ascii_letters + string.digits) for _ in range(length_of_string))
-        print("event id is", event_id)
+        print("event id is", event_id) # add
         event_attribute.append(event_id)
         event_attribute.append(request.values["event_name"])
 
