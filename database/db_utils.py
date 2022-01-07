@@ -471,7 +471,6 @@ def select_event_id(event_id):
         event_attribute['event_name'] = row[1]
         event_attribute['start_date'] = str(row[2])
         event_attribute['end_date'] = str(row[3])
-
         #event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
         #event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
         #event_attribute['deadline_date'] = time.strftime(row[6], '%Y-%m-%d')

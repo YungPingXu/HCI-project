@@ -150,8 +150,8 @@ def vote():
         result["date_list"].append(current_date)
         if current_date == event_attribute["end_date"]:
             break
-        next_date = datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
-        current_date = current_date = time.strftime(next_date, '%Y-%m-%d')
+        next_date = datetime.datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
+        current_date = time.strftime(next_date, '%Y-%m-%d')
 
     #event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
     #event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
