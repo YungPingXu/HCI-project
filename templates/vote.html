@@ -107,7 +107,7 @@
     <div class="upper">
         <select class="input" id="member">
             <option value="" disabled selected hidden>Your Name</option>
-            {% for member in member_list %}
+            {% for member in result.member_list %}
                 <option value="{{member.0}}">{{member.1}}</option>
                 <!-- this value is the corresponding user_id -->
             {% endfor %}
