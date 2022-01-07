@@ -157,10 +157,9 @@ def vote():
         next_date = datetime.datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
         current_day = weekdays[next_date.isoweekday() - 1]
         current_date = next_date.strftime('%Y-%m-%d')
-
-    #event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
-    #event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
-    #event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
+    result["start_time"] = event_attribute["start_time"]
+    result["end_time"] = event_attribute["end_time"]
+    print(result["start_time"], result["end_time"])
     return render_template("vote.html", result=result)
 
 # don't touch this
