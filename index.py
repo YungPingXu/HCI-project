@@ -92,7 +92,7 @@ def create_event():
         length_of_string = 8
         event_id = ''.join(random.SystemRandom().choice(
             string.ascii_letters + string.digits) for _ in range(length_of_string))
-        print("event id is", event_id) # add
+        print("event id is", event_id)  # add
         event_attribute.append(event_id)
         event_attribute.append(request.values["event_name"])
 
@@ -130,11 +130,14 @@ def create_event():
 
         # event_attribute.append(request.values["group_id"])
         event_attribute.append('none')
-        print(event_attribute)
+
         db_utils.insert_event(event_attribute)
+
+        # use member_list to insert table people
 
         return event_id
     return redirect(url_for("index"))
+
 
 time_mapping = {
     "00:00": 1,
@@ -187,11 +190,13 @@ time_mapping = {
     "23:30": 48
 }
 
+
 @app.route("/vote", methods=["GET"])  # 路由和處理函式配對
 def vote():
     if request.method == "GET":
         if "event_id" in request.values:
-            event_attribute = db_utils.select_event_id(request.values["event_id"])
+            event_attribute = db_utils.select_event_id(
+                request.values["event_id"])
             if event_attribute:
                 result = {}
                 result["event_id"] = event_attribute["event_id"]
@@ -200,20 +205,24 @@ def vote():
 
                 current_date = event_attribute["start_date"]
                 weekdays = ["(一)", "(二)", "(三)", "(四)", "(五)", "(六)", "(日)"]
-                current_day = weekdays[datetime.datetime.strptime(current_date, "%Y-%m-%d").isoweekday() - 1]
+                current_day = weekdays[datetime.datetime.strptime(
+                    current_date, "%Y-%m-%d").isoweekday() - 1]
                 # 星期幾
                 while True:
                     tmp = current_date.split("-")
-                    result["date_list"].append(tmp[1] + "/" + tmp[2] + current_day)
+                    result["date_list"].append(
+                        tmp[1] + "/" + tmp[2] + current_day)
                     if current_date == event_attribute["end_date"]:
                         break
-                    next_date = datetime.datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
+                    next_date = datetime.datetime.strptime(
+                        current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
                     current_day = weekdays[next_date.isoweekday() - 1]
                     current_date = next_date.strftime('%Y-%m-%d')
 
                 result["time_list"] = []
                 current_time = event_attribute["start_time"]
-                end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
+                end_time = datetime.datetime.strptime(
+                    event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
                 end_time = end_time.strftime("%H:%M:%S")
                 while current_time != end_time:
                     tmp = current_time.split(":")
@@ -221,7 +230,8 @@ def vote():
                     tmplist.append(tmp[0] + ":" + tmp[1])
                     tmplist.append(time_mapping[tmp[0] + ":" + tmp[1]])
                     result["time_list"].append(tmplist)
-                    next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
+                    next_time = datetime.datetime.strptime(
+                        current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
                     current_time = next_time.strftime("%H:%M:%S")
                 result["start_time"] = event_attribute["start_time"]
                 result["end_time"] = event_attribute["end_time"]
@@ -233,14 +243,25 @@ def vote():
     else:
         return redirect(url_for("index"))
 
+
 @app.route("/send_vote", methods=["POST"])  # 路由和處理函式配對
 def send_vote():
     if request.method == "POST":
-        print(request.values["user_id"])
-        print(request.values["event_id"])
-        print(request.values["selected_time"])
+        date_and_time = request.values["selected_time"].split(';')
+        for dt in date_and_time:
+            choose_attribute = []
+            choose_attribute.append(request.values["user_id"])
+            choose_attribute.append(request.values["event_id"])
+            choose_date = dt.split(',')[0]
+            choose_time_id = dt.split(',')[1]
+            choose_attribute.append(choose_date)
+            choose_attribute.append(choose_time_id)
+            db_utils.insert_choose(choose_attribute)
+            # db_utils.update_people_done(request.values["user_id"])
+
         return "成功送出！"
     return redirect(url_for("index"))
+
 
 # don't touch this
 if __name__ == "__main__":
