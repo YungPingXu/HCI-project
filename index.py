@@ -130,7 +130,7 @@ def create_event():
 
         # event_attribute.append(request.values["group_id"])
         event_attribute.append('none')
-
+        print(event_attribute)
         db_utils.insert_event(event_attribute)
 
         return event_id
