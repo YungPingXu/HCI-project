@@ -126,10 +126,10 @@ def create_event():
         # event_attribute.append(request.values["have_must_attend"])
         event_attribute.append('false')
 
-        db_utils.insert_event(event_attribute)
+        # event_attribute.append(request.values["group_id"])
+        event_attribute.append('none')
 
-        # print * of table event
-        # db_utils.test()
+        db_utils.insert_event(event_attribute)
 
         return "success"
     return redirect(url_for("index"))
