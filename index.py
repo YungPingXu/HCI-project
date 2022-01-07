@@ -136,7 +136,6 @@ def create_event():
         return event_id
     return redirect(url_for("index"))
 
-
 @app.route("/vote", methods=["GET"])  # 路由和處理函式配對
 def vote():
     event_attribute = db_utils.select_event_id(request.values["event_id"])
@@ -157,9 +156,23 @@ def vote():
         next_date = datetime.datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
         current_day = weekdays[next_date.isoweekday() - 1]
         current_date = next_date.strftime('%Y-%m-%d')
+    
+    result["time_list"] = []
+    current_time = event_attribute["start_time"]
+    end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=30)
+    end_time = end_time.strftime("%H:%M:%S")
+    while True:
+        tmp = current_time.split(":")
+        result["time_list"].append(tmp[0] + ":" + tmp[1])
+        if current_time == end_time:
+            break
+        result["time_list"].append(current_time)
+        next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
+        current_time = next_time.strftime("%H:%M:%S")
     result["start_time"] = event_attribute["start_time"]
     result["end_time"] = event_attribute["end_time"]
     print(result["start_time"], result["end_time"])
+    print(result["time_list"])
     return render_template("vote.html", result=result)
 
 # don't touch this
