@@ -154,7 +154,7 @@
             data.append("event_id", event_id);
             data.append("selected_time", selected_time);
 
-            alert(result);
+            console.log(result);
             var request = new XMLHttpRequest();
             request.onload = function() {
                 if(request.status == 200) {

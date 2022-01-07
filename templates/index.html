@@ -350,11 +350,13 @@
             data.append("deadline_date", deadline_date);
             data.append("deadline_time", deadline_time);
 
-            alert(result);
+            console.log(result);
             var request = new XMLHttpRequest();
             request.onload = function() {
                 if(request.status == 200) {
-                    alert(request.responseText);
+                    event_id = request.responseText
+                    alert("成功創建活動！event id 為 " + event_id);
+                    window.location.href = "/vote?event_id=" + event_id;
                 }else{
                     alert("Error!");
                 }

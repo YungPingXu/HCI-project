@@ -239,7 +239,7 @@ def send_vote():
         print(request.values["user_id"])
         print(request.values["event_id"])
         print(request.values["selected_time"])
-        return "成功送出"
+        return "成功送出！"
     return redirect(url_for("index"))
 
 # don't touch this
