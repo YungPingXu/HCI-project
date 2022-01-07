@@ -149,7 +149,7 @@ def vote():
     current_day = "" # 星期幾
     weekdays = ["(一)", "(二)", "(三)", "(四)", "(五)", "(六)", "(日)"]
     while True:
-        tmp = current_date.split(",")
+        tmp = current_date.split("-")
         result["date_list"].append(tmp[1] + "/" + tmp[2] + current_day)
         if current_date == event_attribute["end_date"]:
             break
