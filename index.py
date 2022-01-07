@@ -136,6 +136,57 @@ def create_event():
         return event_id
     return redirect(url_for("index"))
 
+time_mapping = {
+    "00:00": 1,
+    "00:30": 2,
+    "01:00": 3,
+    "01:30": 4,
+    "02:00": 5,
+    "02:30": 6,
+    "03:00": 7,
+    "03:30": 8,
+    "04:00": 9,
+    "04:30": 10,
+    "05:00": 11,
+    "05:30": 12,
+    "06:00": 13,
+    "06:30": 14,
+    "07:00": 15,
+    "07:30": 16,
+    "08:00": 17,
+    "08:30": 18,
+    "09:00": 19,
+    "09:30": 20,
+    "10:00": 21,
+    "10:30": 22,
+    "11:00": 23,
+    "11:30": 24,
+    "12:00": 25,
+    "12:30": 26,
+    "13:00": 27,
+    "13:30": 28,
+    "14:00": 29,
+    "14:30": 30,
+    "15:00": 31,
+    "15:30": 32,
+    "16:00": 33,
+    "16:30": 34,
+    "17:00": 35,
+    "17:30": 36,
+    "18:00": 37,
+    "18:30": 38,
+    "19:00": 39,
+    "19:30": 40,
+    "20:00": 41,
+    "20:30": 42,
+    "21:00": 43,
+    "21:30": 44,
+    "22:00": 45,
+    "22:30": 46,
+    "23:00": 47,
+    "23:30": 48
+}
+
 @app.route("/vote", methods=["GET"])  # 路由和處理函式配對
 def vote():
     event_attribute = db_utils.select_event_id(request.values["event_id"])
@@ -163,13 +214,14 @@ def vote():
     end_time = end_time.strftime("%H:%M:%S")
     while current_time != end_time:
         tmp = current_time.split(":")
-        result["time_list"].append(tmp[0] + ":" + tmp[1])
+        tmplist = []
+        tmplist.append(tmp[0] + ":" + tmp[1])
+        tmplist.append(time_mapping[tmp[0] + ":" + tmp[1]])
+        result["time_list"].tmplist
         next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
         current_time = next_time.strftime("%H:%M:%S")
     result["start_time"] = event_attribute["start_time"]
     result["end_time"] = event_attribute["end_time"]
-    print(result["start_time"], result["end_time"])
-    print(result["time_list"])
     return render_template("vote.html", result=result)
 
 # don't touch this

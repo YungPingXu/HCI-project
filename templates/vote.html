@@ -121,40 +121,12 @@
                 {% endfor %}
               </tr>
             <tr>
-                <td class="time-grid">12:00</td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,25"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,25"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,25"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,25"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,25"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,25"></td>
-            </tr>
-            <tr>
-                <td class="time-grid">12:30</td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,26"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,26"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,26"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,26"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,26"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,26"></td>
-            </tr>
-            <tr>
-                <td class="time-grid">13:00</td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,27"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,27"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,27"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,27"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,27"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,27"></td>
-            </tr>
-            <tr>
-                <td class="time-grid">13:30</td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/4,28"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/5,28"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/6,28"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/7,28"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/8,28"></td>
-                <td class="select-grid"><input type="checkbox" class="selector" value="11/9,28"></td>
+                {% for time in result.time_list %}
+                    <td class="time-grid">{{time.0}}</td>
+                    {% for date in result.date_list %}
+                        <td class="select-grid"><input type="checkbox" class="selector" value="{{date}},{{time.1}}"></td>
+                    {% endfor %}
+                {% endfor %}
             </tr>
         </table>
     </div>
