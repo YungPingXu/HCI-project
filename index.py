@@ -146,8 +146,9 @@ def vote():
     result["date_list"] = []
 
     current_date = event_attribute["start_date"]
-    current_day = "" # 星期幾
     weekdays = ["(一)", "(二)", "(三)", "(四)", "(五)", "(六)", "(日)"]
+    current_day = weekdays[datetime.datetime.strptime(current_date, "%Y-%m-%d").isoweekday() - 1]
+    # 星期幾
     while True:
         tmp = current_date.split("-")
         result["date_list"].append(tmp[1] + "/" + tmp[2] + current_day)
