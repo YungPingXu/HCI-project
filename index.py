@@ -217,7 +217,7 @@ def vote():
         tmplist = []
         tmplist.append(tmp[0] + ":" + tmp[1])
         tmplist.append(time_mapping[tmp[0] + ":" + tmp[1]])
-        result["time_list"].tmplist
+        result["time_list"].append(tmplist)
         next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
         current_time = next_time.strftime("%H:%M:%S")
     result["start_time"] = event_attribute["start_time"]
