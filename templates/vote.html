@@ -93,6 +93,7 @@
         }
         .submit-button:hover {
             border: black 2px solid;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -161,6 +162,8 @@
             request.onload = function() {
                 if(request.status == 200) {
                     alert(request.responseText);
+                    var event_id = document.getElementById("event-id").value;
+                    window.location.href = "/display_vote?event_id=" + event_id;
                 }else{
                     alert("Error!");
                 }
