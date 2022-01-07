@@ -117,14 +117,14 @@
             <tr>
                 <td class="grid"></td>
                 {% for date in result.date_list %}
-                    <td class="grid">{{date}}</td>
+                    <td class="grid">{{date.0}}</td>
                 {% endfor %}
             </tr>
             {% for time in result.time_list %}
                 <tr>
                     <td class="time-grid">{{time.0}}</td>
                     {% for date in result.date_list %}
-                        <td class="select-grid"><input type="checkbox" class="selector" value="{{date}},{{time.1}}"></td>
+                        <td class="select-grid"><input type="checkbox" class="selector" value="{{date.1}},{{time.1}}"></td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -142,12 +142,11 @@
             for (var i = 0; i < x.length; i++) {
                 if(x[i].type == "checkbox"){
                     if(x[i].checked == true) {
-                        selected_time += x[i].value.replace(/\(一\)/i, '').replace(/\(二\)/i, '').replace(/\(三\)/i, '').replace(/\(四\)/i, '').replace(/\(五\)/i, '').replace(/\(六\)/i, '').replace(/\(日\)/i, '')
-                        if(i != x.length - 1)
-                        selected_time += ";";
+                        selected_time += x[i].value + ";";
                     }
                 }
             }
+            console.log(selected_time);
             var result = "user_id=" + user_id + "&event_id=" + event_id + "&selected_time=" + selected_time;
             var data = new FormData();
             data.append("user_id", user_id);

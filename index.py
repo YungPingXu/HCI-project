@@ -210,8 +210,10 @@ def vote():
                 # 星期幾
                 while True:
                     tmp = current_date.split("-")
-                    result["date_list"].append(
-                        tmp[1] + "/" + tmp[2] + current_day)
+                    date_format = []
+                    date_format.append(tmp[1] + "/" + tmp[2] + current_day)
+                    date_format.append(current_date)
+                    result["date_list"].append(date_format)
                     if current_date == event_attribute["end_date"]:
                         break
                     next_date = datetime.datetime.strptime(
@@ -247,8 +249,9 @@ def vote():
 @app.route("/send_vote", methods=["POST"])  # 路由和處理函式配對
 def send_vote():
     if request.method == "POST":
-        date_and_time = request.values["selected_time"].split(';')
+        date_and_time = request.values["selected_time"][:-1].split(';')
         for dt in date_and_time:
+            print(dt)
             choose_attribute = []
             choose_attribute.append(request.values["user_id"])
             choose_attribute.append(request.values["event_id"])

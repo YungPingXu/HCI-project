@@ -138,9 +138,7 @@ def insert_choose(user_choose):
 
     user_id = user_choose[0]
     event_id = user_choose[1]
-    choose_date_raw = user_choose[2].split('/')
-    choose_date = '2022-' + \
-        choose_date_raw[0] + '-' + choose_date_raw[1]  # need modify
+    choose_date = user_choose[2]
     choose_time_id = int(user_choose[3])  # string to integer
 
     cur.execute("""
