@@ -161,12 +161,9 @@ def vote():
     current_time = event_attribute["start_time"]
     end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
     end_time = end_time.strftime("%H:%M:%S")
-    while True:
+    while current_time != end_time:
         tmp = current_time.split(":")
         result["time_list"].append(tmp[0] + ":" + tmp[1])
-        if current_time == end_time:
-            break
-        result["time_list"].append(current_time)
         next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
         current_time = next_time.strftime("%H:%M:%S")
     result["start_time"] = event_attribute["start_time"]
