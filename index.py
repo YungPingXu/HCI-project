@@ -137,7 +137,7 @@ def create_event():
     return redirect(url_for("index"))
 
 
-@app.route("/event_id", methods=["GET"])  # 路由和處理函式配對
+@app.route("/vote", methods=["GET"])  # 路由和處理函式配對
 def vote():
     event_attribute = db_utils.select_event_id(request.values["event_id"])
     result = {}
