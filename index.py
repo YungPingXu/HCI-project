@@ -103,7 +103,7 @@ def create_event():
                 temp_date[1] + '-' + temp_date[0]
             dates.append(change_date)
         event_attribute.append(dates[0])
-        event_attribute.append(dates[1])
+        event_attribute.append(dates[-1])
 
         event_attribute.append(request.values["start_time"])
         event_attribute.append(request.values["end_time"])
