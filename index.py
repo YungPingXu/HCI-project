@@ -146,11 +146,15 @@ def vote():
     result["date_list"] = []
 
     current_date = event_attribute["start_date"]
+    current_day = "" # 星期幾
+    weekdays = ["(一)", "(二)", "(三)", "(四)", "(五)", "(六)", "(日)"]
     while True:
-        result["date_list"].append(current_date)
+        tmp = current_date.split(",")
+        result["date_list"].append(tmp[1] + "/" + tmp[2] + current_day)
         if current_date == event_attribute["end_date"]:
             break
         next_date = datetime.datetime.strptime(current_date, "%Y-%m-%d") + datetime.timedelta(days=1)
+        current_day = weekdays[next_date.isoweekday() - 1]
         current_date = next_date.strftime('%Y-%m-%d')
 
     #event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
