@@ -98,6 +98,11 @@ def insert_event(event_attribute):
         have_must_attend = True
 
     group_id = event_attribute[11]
+    
+    # test
+    print("""
+        INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s, '%s');
+    """ % (event_id, event_name, start_date, end_date, start_time, end_time, deadline_date, deadline_time, anonymous, preference, have_must_attend, group_id))
 
     cur.execute("""
         INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s, '%s');
@@ -467,7 +472,7 @@ def select_event_id(event_id):
         #event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
         event_attribute['start_date'] = row[2]
         event_attribute['end_date'] = row[3]
-        
+
         event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
         event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
         event_attribute['deadline_date'] = time.strftime(row[6], '%Y-%m-%d')
