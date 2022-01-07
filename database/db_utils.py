@@ -466,10 +466,11 @@ def select_event_id(event_id):
     event_attribute = {}
     rows = cur.fetchall()
     for row in rows:
+        print(row)
         event_attribute['event_id'] = row[0]
         event_attribute['event_name'] = row[1]
-        event_attribute['start_date'] = time.strftime('%Y-%m-%d', row[2])
-        event_attribute['end_date'] = time.strftime('%Y-%m-%d', row[3])
+        event_attribute['start_date'] = str(row[2])
+        event_attribute['end_date'] = str(row[3])
 
         #event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
         #event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
@@ -512,3 +513,5 @@ def select_time(time_id):
     conn.close()
 
     return time_slot
+
+select_event_id("dzdt5LLr")
