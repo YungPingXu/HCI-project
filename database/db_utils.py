@@ -468,8 +468,8 @@ def select_event_id(event_id):
     for row in rows:
         event_attribute['event_id'] = row[0]
         event_attribute['event_name'] = row[1]
-        event_attribute['start_date'] = time.strftime(row[2], '%Y-%m-%d')
-        event_attribute['end_date'] = time.strftime(row[3], '%Y-%m-%d')
+        event_attribute['start_date'] = time.strftime('%Y-%m-%d', row[2])
+        event_attribute['end_date'] = time.strftime('%Y-%m-%d', row[3])
 
         #event_attribute['start_time'] = time.strftime(row[4], '%H:%M:%S')
         #event_attribute['end_time'] = time.strftime(row[5], '%H:%M:%S')
