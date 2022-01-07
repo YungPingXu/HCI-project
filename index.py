@@ -233,6 +233,15 @@ def vote():
     else:
         return redirect(url_for("index"))
 
+@app.route("/send_vote", methods=["POST"])  # 路由和處理函式配對
+def send_vote():
+    if request.method == "POST":
+        print(request.values["user_id"])
+        print(request.values["event_id"])
+        print(request.values["selected_time"])
+        return "成功送出"
+    return redirect(url_for("index"))
+
 # don't touch this
 if __name__ == "__main__":
     db_utils.create_tables()

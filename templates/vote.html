@@ -142,7 +142,7 @@
             for (var i = 0; i < x.length; i++) {
                 if(x[i].type == "checkbox"){
                     if(x[i].checked == true) {
-                        selected_time += x[i].value;
+                        selected_time += x[i].value.replace(/\(一\)/i, '').replace(/\(二\)/i, '').replace(/\(三\)/i, '').replace(/\(四\)/i, '').replace(/\(五\)/i, '').replace(/\(六\)/i, '').replace(/\(日\)/i, '')
                         if(i != x.length - 1)
                         selected_time += ";";
                     }
@@ -158,12 +158,12 @@
             var request = new XMLHttpRequest();
             request.onload = function() {
                 if(request.status == 200) {
-                    alert("成功送出!");
+                    alert(request.responseText);
                 }else{
                     alert("Error!");
                 }
             }
-            request.open("POST", "/create-event");
+            request.open("POST", "/send_vote");
             request.send(data);
         }
     </script>
