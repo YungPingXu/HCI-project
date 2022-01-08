@@ -235,11 +235,11 @@ def mention(time_date_now):
     mention_user = []
     rows = cur.fetchall()
     for row in rows:
-        usr = {}
-        usr['user_id'] = row[0]
-        usr['user_name'] = row[1]
-        usr['event_id'] = row[2]
-        usr['group_id'] = row[3]
+        usr = []
+        usr.append(row[0])
+        usr.append(row[1])
+        usr.append(row[2])
+        usr.append(row[3])
         mention_user.append(usr)
 
     conn.close()
