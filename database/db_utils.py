@@ -723,3 +723,35 @@ def not_yet_vote(event_id):
     conn.close()
 
     return no_vote_result
+
+
+def get_user_attribute(user_id, event_id):
+    '''
+        This function returns user's attribute of a given user_id.
+        Input:
+            user_id: string
+        Output:
+            user_attribute: dict, {'user_name':__, 'group_id':__, 'done':__, 'must_attend':__}
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT user_name, group_id, done, must_attend FROM people
+        WHERE user_id = '%s'
+        AND event_id = '%s';
+    """ % (user_id, event_id))
+
+    rows = cur.fetchall()
+    user_attribute = {}
+    for row in rows:
+        user_attribute['user_name'] = row[0]
+        user_attribute['group_id'] = row[1]
+        user_attribute['done'] = row[2]
+        user_attribute['must_attend'] = row[3]
+
+    conn.commit()
+    conn.close()
+
+    return user_attribute
