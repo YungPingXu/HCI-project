@@ -85,12 +85,13 @@ def create_tables():
 
             DROP TABLE IF EXISTS people;
             CREATE TABLE people(
-                user_id varchar(50) PRIMARY KEY,
+                user_id varchar(50),
                 user_name varchar(50),
                 event_id varchar(50),
                 group_id varchar(50),
                 done boolean,
-                must_attend boolean
+                must_attend boolean,
+                PRIMARY KEY (user_id, event_id)
             );
         """)
 
