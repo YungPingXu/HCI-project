@@ -232,7 +232,7 @@ def mention(time_date_now):
             AND time '%s' < deadline_time
             AND deadline_date = date '%s')
         AND done = False;
-    """ % (time_now, date_now))
+    """ % (time_now, time_now, date_now))
 
     mention_user = []
     rows = cur.fetchall()
