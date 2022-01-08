@@ -27,7 +27,7 @@ sched = BlockingScheduler()
 
 #already_mentioned = []
 
-#@sched.scheduled_job("interval", minutes=2)
+@sched.scheduled_job("interval", minutes=2)
 def timed_job():
     mention_list = database.db_utils.mention(get_Taiwan_time())
     print(mention_list)
@@ -37,5 +37,5 @@ def timed_job():
         mention_user(i[3], i[1], i[4])
             #already_mentioned.append(index)
 
-#sched.start()
+sched.start()
 timed_job()
