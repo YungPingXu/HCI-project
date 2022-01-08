@@ -29,8 +29,8 @@
         "contents": [
           {
             "type": "text",
-            "text": "大家都可以參與噢！！",
-            "wrap": true
+            "text": "大家都可以歐！！！",
+            "weight": "bold"
           },
           {
             "type": "box",
