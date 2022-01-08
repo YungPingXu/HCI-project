@@ -59,13 +59,10 @@ def handle_message(event):
     if message == "botbot":
         FlexMessage = json.load(open('new_event.json', 'r', encoding='utf-8'))
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com?group_id=" + group_id
-        line_bot_api.reply_message(
-            event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "botdone":
-        FlexMessage = json.load(
-            open('attend_event.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(
-            event.reply_token, FlexSendMessage('profile', FlexMessage))
+        FlexMessage = json.load(open('attend_event.json', 'r', encoding='utf-8'))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "hihi":
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text="I'm here !! :)"))
