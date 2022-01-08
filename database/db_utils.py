@@ -52,7 +52,8 @@ def create_tables():
                 anonymous boolean,
                 preference varchar(50),
                 have_must_attend boolean,
-                group_id varchar(50)
+                group_id varchar(50),
+                dead boolean
             );
 
             DROP TABLE IF EXISTS people;
@@ -115,9 +116,13 @@ def insert_event(event_attribute):
 
     group_id = event_attribute[11]
 
+    dead = False
+    if event_attribute[12] == 'true':
+        dead = True
+
     cur.execute("""
-        INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s, '%s');
-    """ % (event_id, event_name, start_date, end_date, start_time, end_time, deadline_date, deadline_time, anonymous, preference, have_must_attend, group_id))
+        INSERT INTO event VALUES ('%s', '%s', date '%s', date '%s', time '%s', time '%s', date '%s', time '%s', %s, '%s', %s, '%s', %s);
+    """ % (event_id, event_name, start_date, end_date, start_time, end_time, deadline_date, deadline_time, anonymous, preference, have_must_attend, group_id, dead))
 
     conn.commit()
     conn.close()
@@ -477,6 +482,7 @@ def select_event(group_id):
         event_attribute['preference'] = row[9]
         event_attribute['have_must_attend'] = row[10]
         event_attribute['group_id'] = row[11]
+        event_attribute['dead'] = row[12]
 
     conn.commit()
     conn.close()
@@ -579,7 +585,15 @@ def select_people(group_id):
 
     return group_member
 
+
 def insert_member(user_id, user_name, group_id):
+    '''
+        This function inserts user into table member_list.
+        Input:
+            user_id: string
+            user_name: string
+            group_id: string
+    '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
@@ -594,7 +608,15 @@ def insert_member(user_id, user_name, group_id):
     conn.commit()
     conn.close()
 
+
 def get_members(group_id):
+    '''
+        This function returns members of a group.
+        Input:
+            group_id: string
+        Output:
+            member_list: list
+    '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
@@ -614,9 +636,40 @@ def get_members(group_id):
 
     conn.commit()
     conn.close()
+
     return member_list
 
+
 def init_member_list():
+    '''
+        This function initialize table member_list.
+    '''
     insert_member(user1_id, user1_name, user1_group_id)
     insert_member(user2_id, user2_name, user2_group_id)
     insert_member(user3_id, user3_name, user3_group_id)
+
+
+def not_yet_vote(event_id):
+    '''
+        This function returns the numbers of people that not yet voted of an event.
+        Input:
+            event_id: string
+        Output:
+            no_vote: int
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT count(user_id) FROM people
+        WHERE event_id = '%s'
+        AND done = False;
+    """ % (event_id))
+
+    no_vote = int(cur.fetchall()[0])
+
+    conn.commit()
+    conn.close()
+
+    return no_vote
