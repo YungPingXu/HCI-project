@@ -28,14 +28,14 @@
         "spacing": "sm",
         "contents": [
           {
+            "type": "text",
+            "text": "大家都可以參與噢！！",
+            "wrap": true
+          },
+          {
             "type": "box",
             "layout": "baseline",
             "contents": [
-              {
-                "type": "text",
-                "text": "大家都可以參與噢！！！",
-                "wrap": true
-              },
               {
                 "type": "text",
                 "text": "【活動名稱】",
