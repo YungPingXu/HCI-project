@@ -108,7 +108,7 @@
         <!-- this value is to record event_id -->
     </header>
     <div class="upper">
-        尚有 3 人未投票
+        尚有 {{result.not_yet_vote}} 人未投票
         <div style="display: none;" id="vote_info">
             {% for i in result.display_vote %}
                 <input type="text" class="vote_info" value="{{i}}" hidden>

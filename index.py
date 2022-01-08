@@ -133,7 +133,7 @@ def create_event():
             preference = 'all_ok'
         event_attribute.append(preference)
 
-        # event_attribute.append(request.values["have_must_attend"])
+        #event_attribute.append(request.values["have_must_attend"])
         event_attribute.append('false')
 
         event_attribute.append(request.values["group_id"])
@@ -142,6 +142,15 @@ def create_event():
         db_utils.insert_event(event_attribute)
 
         # use member_list to insert table people
+        for member in db_utils.get_members(request.values["group_id"]):
+            user_attribute = []
+            user_attribute.append(member[0])
+            user_attribute.append(member[1])
+            user_attribute.append(event_id)
+            user_attribute.append(request.values["group_id"])
+            user_attribute.append("false")
+            user_attribute.append("false")
+            db_utils.insert_people(user_attribute)
 
         return event_id
     return redirect(url_for("index"))
@@ -260,6 +269,12 @@ def vote():
 def send_vote():
     if request.method == "POST":
         date_and_time = request.values["selected_time"][:-1].split(';')
+
+        user_delete = []
+        user_delete.append(request.values["user_id"])
+        user_delete.append(request.values["event_id"])
+        db_utils.delete_choose_rows(user_delete)
+
         for dt in date_and_time:
             print(dt)
             choose_attribute = []
@@ -270,7 +285,7 @@ def send_vote():
             choose_attribute.append(choose_date)
             choose_attribute.append(choose_time_id)
             db_utils.insert_choose(choose_attribute)
-            # db_utils.update_people_done(request.values["user_id"])
+            db_utils.update_people_done(request.values["user_id"])
 
         return "成功送出！"
     return redirect(url_for("index"))
@@ -329,6 +344,8 @@ def display_vote():
                     display_vote.append(
                         str(i["choose_date"]) + "," + str(i["choose_time_id"]) + "," + str(i["count"]))
                 result["display_vote"] = display_vote
+
+                result["not_yet_vote"] = db_utils.not_yet_vote(result["event_id"])
 
                 return render_template("display-vote.html", result=result)
             else:
