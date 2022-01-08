@@ -17,7 +17,7 @@
       "contents": [
         {
           "type": "text",
-          "text": "投票時間！",
+          "text": "大家真的太忙了QQ",
           "weight": "bold",
           "size": "xl"
         },
@@ -67,84 +67,51 @@
           "spacing": "sm",
           "contents": [
             {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "【活動名稱】",
-                  "color": "#A0522D",
-                  "size": "md",
-                  "flex": 3
-                },
-                {
-                  "type": "text",
-                  "text": "這邊要導入活動名稱",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "md",
-                  "flex": 5
-                }
-              ]
+              "type": "text",
+              "text": "很抱歉！在 [Start_Day] ~ [End_Day] 中，並沒有大家都方便的時間，請考慮修改自己可以參與的時間，或考量是否再次訂定其他潛在活動時段？",
+              "wrap": true
             },
             {
               "type": "box",
               "layout": "baseline",
-              "spacing": "sm",
               "contents": [
                 {
                   "type": "text",
-                  "text": "【投票截止】",
-                  "color": "#A0522D",
-                  "size": "md",
-                  "flex": 3
-                },
-                {
-                  "type": "text",
-                  "text": "這邊要導入截止時間",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "md",
+                  "text": "【結束投票】",
                   "flex": 5,
-                  "margin": "none"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "vertical",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "活動細節設定完成！麻煩各位針對此活動回覆意願時間，並請在截止時間內完成填寫！",
-                  "margin": "xs",
-                  "decoration": "none",
-                  "wrap": true,
-                  "size": "sm"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "【結算投票】",
-                  "flex": 3,
                   "size": "sm",
                   "color": "#A0522D"
                 },
                 {
                   "type": "text",
-                  "text": "針對當前投票結果進行",
+                  "text": "刪除這次投票紀錄(不可逆)",
                   "flex": 5,
-                  "size": "sm"
+                  "size": "sm",
+                  "wrap": true
                 }
               ],
               "spacing": "none",
               "margin": "xxl"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "【發起新活動】",
+                  "flex": 5,
+                  "size": "sm",
+                  "color": "#A0522D"
+                },
+                {
+                  "type": "text",
+                  "text": "刪除這次投票紀錄(不可逆)並發起新的活動",
+                  "flex": 5,
+                  "size": "sm",
+                  "wrap": true
+                }
+              ]
             }
           ]
         }
@@ -163,7 +130,8 @@
             "type": "uri",
             "label": "填寫／修改時間",
             "uri": "https://www.youtube.com/watch?v=Nbj20ejxtuA"
-          }
+          },
+          "flex": 3
         },
         {
           "type": "button",
@@ -177,13 +145,23 @@
         },
         {
           "type": "button",
-          "style": "link",
-          "height": "sm",
           "action": {
             "type": "uri",
-            "label": "結算投票",
-            "uri": "https://www.youtube.com/watch?v=hACmRLXL4yM"
-          }
+            "label": "結束投票",
+            "uri": "https://www.youtube.com/watch?v=EgS4A0YsIaY"
+          },
+          "height": "sm",
+          "style": "link"
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "uri",
+            "label": "發起新活動",
+            "uri": "http://linecorp.com/"
+          },
+          "height": "sm",
+          "style": "link"
         }
       ],
       "flex": 0
