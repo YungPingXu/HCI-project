@@ -23,9 +23,36 @@ user3_group_id = os.getenv("user3_group_id")
 ###################
 
 
+def create_constant_table():
+    '''
+        This function creates tables: time and member_list.
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+    cur.execute("""
+            DROP TABLE IF EXISTS time;
+            CREATE TABLE time(
+                time_id integer,
+                time_start time,
+                time_end time
+            );
+
+            DROP TABLE IF EXISTS member_list;
+            CREATE TABLE member_list(
+                user_id varchar(50) PRIMARY KEY,
+                user_name varchar(50),
+                group_id varchar(50)
+            );
+        """)
+
+    conn.commit()
+    conn.close()
+
+
 def create_tables():
     '''
-        This function creates tables: choose, event, time and people.
+        This function creates tables: choose, event, and people.
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -64,20 +91,6 @@ def create_tables():
                 group_id varchar(50),
                 done boolean,
                 must_attend boolean
-            );
-
-            DROP TABLE IF EXISTS time;
-            CREATE TABLE time(
-                time_id integer,
-                time_start time,
-                time_end time
-            );
-
-            DROP TABLE IF EXISTS member_list;
-            CREATE TABLE member_list(
-                user_id varchar(50) PRIMARY KEY,
-                user_name varchar(50),
-                group_id varchar(50)
             );
         """)
 
