@@ -174,7 +174,7 @@ def insert_choose(user_choose):
     user_id = user_choose[0]
     event_id = user_choose[1]
     choose_date = user_choose[2]
-    choose_time_id = int(user_choose[3])  # string to integer
+    choose_time_id = int(user_choose[3])
 
     cur.execute("""
         INSERT INTO choose VALUES ('%s', '%s', date '%s', %s);
@@ -214,7 +214,7 @@ def mention(time_date_now):
         Input:
             time_date_now: list
         Output:
-            mention_user: list, [{'user_id':__, 'event_id':__, 'group_id':__},...,{}]
+            mention_user: list, [{'user_id':__, 'user_name':__, 'event_id':__, 'group_id':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -224,7 +224,7 @@ def mention(time_date_now):
     time_now = time_date_now[1]
     date_now = time_date_now[0]
     cur.execute("""
-        SELECT user_id, event_id, group_id FROM people
+        SELECT user_id, user_name, event_id, group_id FROM people
         WHERE event_id IN
             (SELECT event_id FROM event
             WHERE deadline_time - time '%s' < time '00:30:00'
@@ -237,8 +237,9 @@ def mention(time_date_now):
     rows = cur.fetchall()
     for row in rows:
         usr['user_id'] = row[0]
-        usr['event_id'] = row[1]
-        usr['group_id'] = row[2]
+        usr['user_name'] = row[1]
+        usr['event_id'] = row[2]
+        usr['group_id'] = row[3]
         mention_user.append(usr)
 
     conn.close()
