@@ -61,11 +61,11 @@ def handle_message(event):
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com?group_id=" + group_id
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "botdone":
-        FlexMessage = json.load(open('attend_event.json', 'r', encoding='utf-8'))
+        FlexMessage = json.load(open('voting_time.json', 'r', encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "hihi":
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text="I'm here !! :)"))
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="I'm here !! :)"))
+
 
 
 # this event will be triggered when the bot is invited to a group

@@ -1,0 +1,189 @@
+{
+    "type": "bubble",
+    "hero": {
+      "type": "image",
+      "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+      "size": "full",
+      "aspectRatio": "20:13",
+      "aspectMode": "cover",
+      "action": {
+        "type": "uri",
+        "uri": "http://linecorp.com/"
+      }
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "投票時間！",
+          "weight": "bold",
+          "size": "xl"
+        },
+        {
+          "type": "box",
+          "layout": "baseline",
+          "margin": "md",
+          "contents": [
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "size": "sm",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "icon",
+              "url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/review_gold_star_28.png"
+            },
+            {
+              "type": "text",
+              "text": "5.0",
+              "size": "sm",
+              "color": "#999999",
+              "margin": "md",
+              "flex": 0
+            }
+          ]
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "margin": "lg",
+          "spacing": "sm",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "【活動名稱】",
+                  "color": "#A0522D",
+                  "size": "md",
+                  "flex": 3
+                },
+                {
+                  "type": "text",
+                  "text": "這邊要導入活動名稱",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "md",
+                  "flex": 5
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "【投票截止】",
+                  "color": "#A0522D",
+                  "size": "md",
+                  "flex": 3
+                },
+                {
+                  "type": "text",
+                  "text": "這邊要導入截止時間",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "md",
+                  "flex": 5,
+                  "margin": "none"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "活動細節設定完成！麻煩各位針對此活動回覆意願時間，並請在截止時間內完成填寫！",
+                  "margin": "xs",
+                  "decoration": "none",
+                  "wrap": true,
+                  "size": "sm"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "【結算投票】",
+                  "flex": 3,
+                  "size": "sm",
+                  "color": "#A0522D"
+                },
+                {
+                  "type": "text",
+                  "text": "針對當前投票結果進行",
+                  "flex": 5,
+                  "size": "sm"
+                }
+              ],
+              "spacing": "none",
+              "margin": "xxl"
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "box",
+      "layout": "vertical",
+      "spacing": "sm",
+      "contents": [
+        {
+          "type": "button",
+          "style": "link",
+          "height": "sm",
+          "action": {
+            "type": "uri",
+            "label": "填寫／修改時間",
+            "uri": "https://www.youtube.com/watch?v=Nbj20ejxtuA"
+          }
+        },
+        {
+          "type": "button",
+          "style": "link",
+          "height": "sm",
+          "action": {
+            "type": "uri",
+            "label": "查看當前投票狀況",
+            "uri": "https://www.youtube.com/watch?v=39ixCVI9ACU"
+          }
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "uri",
+            "label": "結算投票",
+            "uri": "https://www.youtube.com/watch?v=hACmRLXL4yM"
+          }
+        }
+      ],
+      "flex": 0
+    }
+  }
