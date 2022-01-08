@@ -66,7 +66,7 @@ def handle_message(event):
     elif message == "no_common":
         FlexMessage = json.load(open('no_common.json', 'r', encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
-    elif message == "everyone_ok_result":
+    elif message == "everyone_ok":
         FlexMessage = json.load(open('eneryone_ok_result.json', 'r', encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "result":
