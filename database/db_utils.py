@@ -275,10 +275,11 @@ def result_final(deadline):
         Input:
             deadline: list
         Output:
-            result: list, contains below three parameters
+            result: list, contains below four parameters
                 event_id: string
                 event_time_result: list, [{'date':__, 'time_id':__, 'count':__},...,{}]
                 event_time_user: list, [{'user_id':__, 'choose_date':__, 'choose_time_id':__},...,{}]
+                voted_number: int
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -296,6 +297,11 @@ def result_final(deadline):
     events = cur.fetchall()
     for event in events:
         event_id = event[0]
+
+        cur.execute("""
+            UPDATE event SET dead = True 
+            WHERE event_id = '%s' 
+        """ % (event_id))
 
         cur.execute("""
             SELECT choose_date, choose_time_id FROM choose 
@@ -331,7 +337,18 @@ def result_final(deadline):
             user_choose['choose_time_id'] = row[2]
             event_time_user.append(user_choose)
 
-        result.append([event_id, event_time_result, event_time_user])
+        cur.execute("""
+            SELECT count(user_id) FROM people 
+            WHERE event_id = '%s'; 
+        """ % (event_id))
+
+        rows = cur.fetchall()
+        voted_number = int()
+        for row in rows:
+            voted_number = int(row[0])
+
+        result.append([event_id, event_time_result,
+                      event_time_user, voted_number])
 
     conn.close()
 
@@ -667,7 +684,10 @@ def not_yet_vote(event_id):
         AND done = False;
     """ % (event_id))
 
-    no_vote = int(cur.fetchall()[0])
+    rows = cur.fetchall()
+    no_vote = int()
+    for row in rows:
+        no_vote = int(row[0])
 
     conn.commit()
     conn.close()
