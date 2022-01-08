@@ -396,9 +396,11 @@ def insert_people(user_attribute):
     if user_attribute[5] == 'true':
         must_attend = True
 
+    event_name = user_attribute[6]
+
     cur.execute("""
-        INSERT INTO people VALUES ('%s', '%s', '%s', '%s', %s, %s);
-    """ % (user_id, user_name, event_id, group_id, done, must_attend))
+        INSERT INTO people VALUES ('%s', '%s', '%s', '%s', %s, %s, '%s');
+    """ % (user_id, user_name, event_id, group_id, done, must_attend, event_name))
 
     conn.commit()
     conn.close()
