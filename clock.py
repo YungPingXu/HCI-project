@@ -38,4 +38,3 @@ def timed_job():
             #already_mentioned.append(index)
 
 sched.start()
-timed_job()
