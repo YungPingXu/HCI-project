@@ -58,11 +58,13 @@ def handle_message(event):
     if message == "botbot":
         FlexMessage = json.load(open('new_event.json', 'r', encoding='utf-8'))
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com?group_id=" + group_id
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(
+            event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "botdone":
         FlexMessage = json.load(
             open('attend_event.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(
+            event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "hihi":
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text="I'm here !! :)"))
@@ -88,6 +90,7 @@ def index():
         else:
             return redirect("/?group_id=C36e166f739d14fffbd20c0ce7c772eef")
     return ""
+
 
 @app.route("/create-event", methods=["POST"])  # 路由和處理函式配對
 def create_event():
@@ -206,7 +209,8 @@ def vote():
                 result = {}
                 result["event_id"] = event_attribute["event_id"]
                 result["event_name"] = event_attribute['event_name']
-                result["member_list"] = db_utils.get_members(event_attribute['group_id'])
+                result["member_list"] = db_utils.get_members(
+                    event_attribute['group_id'])
                 result["date_list"] = []
 
                 current_date = event_attribute["start_date"]
@@ -271,11 +275,13 @@ def send_vote():
         return "成功送出！"
     return redirect(url_for("index"))
 
+
 @app.route("/display_vote", methods=["GET"])  # 路由和處理函式配對
 def display_vote():
     if request.method == "GET":
         if "event_id" in request.values:
-            event_attribute = db_utils.select_event_id(request.values["event_id"])
+            event_attribute = db_utils.select_event_id(
+                request.values["event_id"])
             if event_attribute:
                 result = {}
                 result["event_id"] = event_attribute["event_id"]
@@ -302,7 +308,8 @@ def display_vote():
 
                 result["time_list"] = []
                 current_time = event_attribute["start_time"]
-                end_time = datetime.datetime.strptime(event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
+                end_time = datetime.datetime.strptime(
+                    event_attribute["end_time"], "%H:%M:%S") + datetime.timedelta(minutes=1)
                 end_time = end_time.strftime("%H:%M:%S")
                 while current_time != end_time:
                     tmp = current_time.split(":")
@@ -310,7 +317,8 @@ def display_vote():
                     tmplist.append(tmp[0] + ":" + tmp[1])
                     tmplist.append(time_mapping[tmp[0] + ":" + tmp[1]])
                     result["time_list"].append(tmplist)
-                    next_time = datetime.datetime.strptime(current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
+                    next_time = datetime.datetime.strptime(
+                        current_time, "%H:%M:%S") + datetime.timedelta(minutes=30)
                     current_time = next_time.strftime("%H:%M:%S")
                 result["start_time"] = event_attribute["start_time"]
                 result["end_time"] = event_attribute["end_time"]
@@ -318,7 +326,8 @@ def display_vote():
                 print(result["date_list"])
                 display_vote = []
                 for i in db_utils.result_sofar(result["event_id"]):
-                    display_vote.append(str(i["choose_date"]) + "," + str(i["choose_time_id"]) + "," + str(i["count"]))
+                    display_vote.append(
+                        str(i["choose_date"]) + "," + str(i["choose_time_id"]) + "," + str(i["count"]))
                 result["display_vote"] = display_vote
 
                 return render_template("display-vote.html", result=result)
@@ -328,7 +337,9 @@ def display_vote():
             return "event_id parameter does not exist"
     return redirect(url_for("index"))
 
+
 # don't touch this
 if __name__ == "__main__":
+    db_utils.create_tables()
     app.debug = True
     app.run()
