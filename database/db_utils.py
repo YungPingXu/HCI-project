@@ -686,7 +686,7 @@ def not_yet_vote(event_id):
         Input:
             event_id: string
         Output:
-            no_vote: int
+            no_vote_result: dict, {'no_vote_count':__, 'no_vote_people':__}
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -698,12 +698,28 @@ def not_yet_vote(event_id):
         AND done = False;
     """ % (event_id))
 
+    no_vote_result = {}
     rows = cur.fetchall()
-    no_vote = int()
+    no_vote_count = int()
     for row in rows:
-        no_vote = int(row[0])
+        no_vote_count = int(row[0])
+
+    no_vote_result['no_vote_count'] = no_vote_count
+
+    cur.execute("""
+        SELECT user_id FROM people
+        WHERE event_id = '%s'
+        AND done = False;
+    """ % (event_id))
+
+    rows = cur.fetchall()
+    no_vote_people = []
+    for row in rows:
+        no_vote_people.append(row[0])
+
+    no_vote_result['no_vote_people'] = no_vote_people
 
     conn.commit()
     conn.close()
 
-    return no_vote
+    return no_vote_result
