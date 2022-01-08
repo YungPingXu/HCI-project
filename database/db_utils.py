@@ -233,9 +233,9 @@ def mention(time_date_now):
     """ % (time_now, date_now))
 
     mention_user = []
-    usr = {}
     rows = cur.fetchall()
     for row in rows:
+        usr = {}
         usr['user_id'] = row[0]
         usr['user_name'] = row[1]
         usr['event_id'] = row[2]
