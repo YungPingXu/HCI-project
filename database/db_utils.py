@@ -92,6 +92,7 @@ def create_tables():
                 group_id varchar(50),
                 done boolean,
                 must_attend boolean,
+                event_name varchar(50),
                 PRIMARY KEY (user_id, event_id)
             );
         """)
@@ -227,22 +228,24 @@ def mention(time_date_now):
     time_now = time_date_now[1]
     date_now = time_date_now[0]
     cur.execute("""
-        SELECT user_id, user_name, event_id, group_id FROM people
+        SELECT user_id, user_name, event_id, group_id, event_name FROM people
         WHERE event_id IN
             (SELECT event_id FROM event
             WHERE deadline_time - time '%s' < time '00:30:00'
+            AND time '%s' < deadline_time
             AND deadline_date = date '%s')
         AND done = False;
-    """ % (time_now, date_now))
+    """ % (time_now, time_now, date_now))
 
     mention_user = []
-    usr = {}
     rows = cur.fetchall()
     for row in rows:
-        usr['user_id'] = row[0]
-        usr['user_name'] = row[1]
-        usr['event_id'] = row[2]
-        usr['group_id'] = row[3]
+        usr = []
+        usr.append(row[0])
+        usr.append(row[1])
+        usr.append(row[2])
+        usr.append(row[3])
+        usr.append(row[4])
         mention_user.append(usr)
 
     conn.close()

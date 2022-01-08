@@ -153,6 +153,7 @@ def create_event():
             user_attribute.append(request.values["group_id"])
             user_attribute.append("false")
             user_attribute.append("false")
+            user_attribute.append(request.values["event_name"])
             db_utils.insert_people(user_attribute)
 
         return event_id
