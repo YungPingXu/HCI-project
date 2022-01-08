@@ -17,7 +17,7 @@ def get_Taiwan_time():
     dt2 = dt1.astimezone(timezone(timedelta(hours=8))) # 轉換時區 -> 東八區
     return dt2.strftime("%Y-%m-%d %H:%M:%S")
 
-def mention(group_id, user_name):
+def mention_user(group_id, user_name):
     line_bot_api.push_message(group_id, TextSendMessage(text="@" + user_name))
 
 sched = BlockingScheduler()
@@ -31,7 +31,7 @@ def timed_job():
         for i in mention_user:
             index = i["user_id"] + "," + i["event_id"] + "," + i["group_id"]
             if index not in already_mentioned:
-                mention(i["group_id"], i["user_name"])
+                mention_user(i["group_id"], i["user_name"])
                 already_mentioned.append()
 
 sched.start()
