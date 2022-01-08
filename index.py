@@ -59,22 +59,22 @@ def handle_message(event):
     if message == "botbot":
         FlexMessage = json.load(open('new_event.json', 'r', encoding='utf-8'))
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com?group_id=" + group_id
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('Scheduling Bot', FlexMessage))
     elif message == "botdone":
         FlexMessage = json.load(open('voting_time.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('Scheduling Bot', FlexMessage))
     elif message == "busybusy":
         FlexMessage = json.load(open('no_common.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('Scheduling Bot', FlexMessage))
     elif message == "everyone":
         FlexMessage = json.load(open('everyone.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('Scheduling Bot', FlexMessage))
     elif message == "result":
         FlexMessage = json.load(open('normal_result.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('Scheduling Bot', FlexMessage))
     elif message == "judge":
         FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
-        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('Scheduling Bot', FlexMessage))
     elif message == "hihi":
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="I'm here !! :)"))
 

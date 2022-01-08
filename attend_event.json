@@ -74,7 +74,7 @@
                 {
                   "type": "text",
                   "text": "【參與活動】",
-                  "color": "#A0522D",
+                  "color": "#DB6D60",
                   "size": "sm",
                   "flex": 3
                 },
@@ -96,7 +96,7 @@
                 {
                   "type": "text",
                   "text": "【查看結果】",
-                  "color": "#A0522D",
+                  "color": "#DB6D60",
                   "size": "sm",
                   "flex": 3
                 },
