@@ -6,6 +6,7 @@ from linebot.models import FlexSendMessage, TextSendMessage
 from dotenv import load_dotenv
 from database import db_utils
 
+from datetime import timedelta
 import datetime
 import time
 import random
@@ -118,7 +119,9 @@ def create_event():
 
         deadline_date = request.values["deadline_date"]
         if request.values["deadline_date"] == '':
-            deadline_date = dates[0]
+            deadline_date = str(datetime.datetime.strptime(
+                dates[0], "%Y-%m-%d") - timedelta(1))
+            print(deadline_date)
         event_attribute.append(deadline_date)
 
         deadline_time = request.values["deadline_time"]
