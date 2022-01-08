@@ -133,7 +133,7 @@ def create_event():
             preference = 'all_ok'
         event_attribute.append(preference)
 
-        #event_attribute.append(request.values["have_must_attend"])
+        # event_attribute.append(request.values["have_must_attend"])
         event_attribute.append('false')
 
         event_attribute.append(request.values["group_id"])
@@ -345,7 +345,8 @@ def display_vote():
                         str(i["choose_date"]) + "," + str(i["choose_time_id"]) + "," + str(i["count"]))
                 result["display_vote"] = display_vote
 
-                result["not_yet_vote"] = db_utils.not_yet_vote(result["event_id"])
+                result["not_yet_vote"] = db_utils.not_yet_vote(result["event_id"])[
+                    'no_vote_count']
 
                 return render_template("display-vote.html", result=result)
             else:
