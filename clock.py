@@ -20,8 +20,8 @@ def get_Taiwan_time():
     time_date_now.append(dt2.strftime("%H:%M:%S"))
     return time_date_now
 
-def mention_user(group_id, user_name):
-    line_bot_api.push_message(group_id, TextSendMessage(text="@" + user_name + " 尚未填寫 請盡速填寫！"))
+def mention_user(group_id, user_name, event_name):
+    line_bot_api.push_message(group_id, TextSendMessage(text="@" + user_name + " " + event_name + "活動尚未填寫 請盡速填寫!!"))
 
 sched = BlockingScheduler()
 
@@ -34,7 +34,7 @@ def timed_job():
     for i in mention_list:
         #index = i["user_id"] + "," + i["event_id"] + "," + i["group_id"]
         #if index not in already_mentioned:
-        mention_user(i[3], i[1])
+        mention_user(i[3], i[1], i[4])
             #already_mentioned.append(index)
 
 sched.start()
