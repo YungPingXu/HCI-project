@@ -228,7 +228,7 @@ def mention(time_date_now):
     time_now = time_date_now[1]
     date_now = time_date_now[0]
     cur.execute("""
-        SELECT user_id, user_name, event_id, group_id, event_name FROM people
+        SELECT user_id, user_name, event_id, group_id, event_name, done FROM people
         WHERE event_id IN
             (SELECT event_id FROM event
             WHERE deadline_time - time '%s' < time '00:30:00'
@@ -239,6 +239,7 @@ def mention(time_date_now):
 
     mention_user = []
     rows = cur.fetchall()
+    print(rows)
     for row in rows:
         usr = []
         usr.append(row[0])
