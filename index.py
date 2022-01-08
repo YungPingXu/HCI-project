@@ -72,6 +72,9 @@ def handle_message(event):
     elif message == "result":
         FlexMessage = json.load(open('normal_result.json', 'r', encoding='utf-8'))
         line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
+    elif message == "judge":
+        FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
+        line_bot_api.reply_message(event.reply_token, FlexSendMessage('profile', FlexMessage))
     elif message == "hihi":
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text="I'm here !! :)"))
 
