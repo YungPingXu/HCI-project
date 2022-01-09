@@ -500,12 +500,12 @@ def arbitrate_first(event_id):
                 temp_time = {}
                 temp_time['date'] = str(ots['choose_date'])
                 temp_time['time_id'] = ots['choose_time_id']
-                
+
                 cur.execute("""
                     SELECT user_id FROM choose
                     WHERE event_id = '%s'
                     AND choose_date = date '%s'
-                    AND choose_time_id = time '%s';
+                    AND choose_time_id = %s;
                 """ % (event_id, temp_time['date'], temp_time['time_id']))
                 rows = cur.fetchall()
                 present_user = []

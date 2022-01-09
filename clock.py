@@ -57,5 +57,4 @@ def timed_job():
     
     database.db_utils.check_and_end(get_Taiwan_time())
     
-
 sched.start()
