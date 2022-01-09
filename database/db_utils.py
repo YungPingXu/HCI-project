@@ -625,16 +625,17 @@ def arbitrate_second(event_id, first_result):
     """ % (event_id, event_id))
 
     result = []
-    for re in first_result:
+    for fre in first_result:
         result.append(
-            {'choose_date': re['date'], 'choose_time_id': re['time_id'], 'count': 0})
+            {'choose_date': fre['date'], 'choose_time_id': fre['time_id'], 'count': 0})
 
     rows = cur.fetchall()
     for row in rows:
         for re in result:
-            if re['choose_date'] == row[1] and re['choose_time_id'] == row[2]:
+            if re['choose_date'] == str(row[1]) and re['choose_time_id'] == row[2]:
                 re['count'] += 1
 
+    print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
@@ -749,8 +750,9 @@ def arbitrate_second(event_id, first_result):
         temp_time = {}
         temp_time['date'] = str(ordered_time_slot[-1]['choose_date'])
         temp_time['time_id'] = ordered_time_slot[-1]['choose_time_id']
+
         cur.execute("""
-            SELECT user_id FROM choose
+            SELECT DISTINCT user_id FROM choose
             WHERE event_id = '%s'
             AND choose_date = date '%s'
             AND choose_time_id = %s;
