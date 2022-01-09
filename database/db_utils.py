@@ -494,7 +494,7 @@ def arbitrate_first(event_id):
                 return arbitrate_result
         else:
             ordered_time_slot = ordered_result
-            print(ordered_time_slot)
+            #print(ordered_time_slot)
             arbitrate_result = []
             for ots in ordered_time_slot:
                 temp_time = {}
@@ -531,7 +531,10 @@ def arbitrate_first(event_id):
                             pre = True
                             break
                     if pre == False:
-                        absent_user.append(row[1])
+                        for un in user_name:
+                            if au == un[0]:
+                                absent_user.append(un[1])
+                                break
                 temp_time['absent_user'] = absent_user
 
                 arbitrate_result.append(temp_time)
