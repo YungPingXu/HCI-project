@@ -417,10 +417,8 @@ def arbitrate_first(event_id):
     """ % (event_id, event_id))
 
     rows = cur.fetchall()
-    #print(rows)
     result = []
     for row in rows:
-        #print(row)
         find = False
         for re in result:
             if re['choose_date'] == row[1] and re['choose_time_id'] == row[2]:
@@ -432,9 +430,7 @@ def arbitrate_first(event_id):
             time_section['choose_time_id'] = row[2]
             time_section['count'] = 1
             result.append(time_section)
-            #print(time_section)
 
-    #print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
@@ -466,7 +462,7 @@ def arbitrate_first(event_id):
             total_user += 1
 
     ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
-    #print(ordered_result)
+
     if ordered_result[0]['count'] < total_must_attend_user / 2:
         conn.commit()
         conn.close()
@@ -491,16 +487,18 @@ def arbitrate_first(event_id):
             if prefer == 'early':
                 conn.commit()
                 conn.close()
-                arbitrate_result.append({'date': str(ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': []})
+                arbitrate_result.append({'date': str(
+                    ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': []})
                 return arbitrate_result
             else:
                 conn.commit()
                 conn.close()
-                arbitrate_result.append({'date': str(ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []})
+                arbitrate_result.append({'date': str(
+                    ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []})
                 return arbitrate_result
         else:
             ordered_time_slot = ordered_result
-            #print(ordered_time_slot)
+
             arbitrate_result = []
             for ots in ordered_time_slot:
                 temp_time = {}
@@ -517,7 +515,7 @@ def arbitrate_first(event_id):
                 present_user = []
                 for row in rows:
                     present_user.append(row[0])
-                
+
                 cur.execute("""
                     SELECT user_id, user_name FROM people
                     WHERE event_id = '%s';
@@ -544,13 +542,15 @@ def arbitrate_first(event_id):
                 temp_time['absent_user'] = absent_user
 
                 arbitrate_result.append(temp_time)
+
                 if len(arbitrate_result) == 3:
                     break
 
     conn.commit()
     conn.close()
-    print(arbitrate_result)
+
     return arbitrate_result
+
 
 def arbitrate_second(event_id):
     '''
@@ -563,14 +563,15 @@ def arbitrate_second(event_id):
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
-    cur.execute("""
-        SELECT choose.user_id, choose_date, choose_time_id FROM choose
+    cur.execute(""" 
+        SELECT choose.user_id, choose_date, choose_time_id, event_id FROM choose
         INNER JOIN (SELECT user_id FROM people
                     WHERE event_id = '%s'
                     AND must_attend = True
                     AND done = True) AS attend
-        ON choose.user_id = attend.user_id;
-    """ % (event_id))
+        ON choose.user_id = attend.user_id
+        WHERE event_id = '%s';
+    """ % (event_id, event_id))
 
     rows = cur.fetchall()
     result = []
@@ -600,7 +601,7 @@ def arbitrate_second(event_id):
             total_must_attend_user += 1
 
     cur.execute("""
-        SELECT user_id, choose_date, choose_time_id FROM choose 
+        SELECT user_id FROM people 
         WHERE event_id = '%s'; 
     """ % (event_id))
 
@@ -640,37 +641,84 @@ def arbitrate_second(event_id):
         temp_time = {}
         temp_time['date'] = str(ordered_time_slot[0]['choose_date'])
         temp_time['time_id'] = ordered_time_slot[0]['choose_time_id']
+
         cur.execute("""
-            SELECT people.user_id, people.user_name FROM people
-            INNER JOIN (SELECT user_id FROM choose
-                        WHERE event_id = '%s'
-                        AND choose_date != '%s'
-                        AND choose_time_id != '%s') AS need_mention
-            ON people.user_id = need_mention.user_id
+            SELECT user_id FROM choose
+            WHERE event_id = '%s'
+            AND choose_date = date '%s'
+            AND choose_time_id = %s;
         """ % (event_id, temp_time['date'], temp_time['time_id']))
         rows = cur.fetchall()
-        absent_user = []
+        present_user = []
         for row in rows:
-            absent_user.append(row[1])
+            present_user.append(row[0])
+
+        cur.execute("""
+            SELECT user_id, user_name FROM people
+            WHERE event_id = '%s';
+        """ % (event_id))
+        rows = cur.fetchall()
+        all_user = []
+        user_name = []
+        for row in rows:
+            all_user.append(row[0])
+            user_name.append((row[0], row[1]))
+
+        absent_user = []
+        for au in all_user:
+            pre = False
+            for pu in present_user:
+                if au == pu:
+                    pre = True
+                    break
+            if pre == False:
+                for un in user_name:
+                    if au == un[0]:
+                        absent_user.append(un[1])
+                        break
         temp_time['absent_user'] = absent_user
+
         arbitrate_result.append(temp_time)
     else:
         temp_time = {}
         temp_time['date'] = str(ordered_time_slot[-1]['choose_date'])
         temp_time['time_id'] = ordered_time_slot[-1]['choose_time_id']
         cur.execute("""
-            SELECT people.user_id, people.user_name FROM people
-            INNER JOIN (SELECT user_id FROM choose
-                        WHERE event_id = '%s'
-                        AND choose_date != '%s'
-                        AND choose_time_id != '%s') AS need_mention
-            ON people.user_id = need_mention.user_id
+            SELECT user_id FROM choose
+            WHERE event_id = '%s'
+            AND choose_date = date '%s'
+            AND choose_time_id = %s;
         """ % (event_id, temp_time['date'], temp_time['time_id']))
         rows = cur.fetchall()
-        absent_user = []
+        present_user = []
         for row in rows:
-            absent_user.append(row[1])
+            present_user.append(row[0])
+
+        cur.execute("""
+            SELECT user_id, user_name FROM people
+            WHERE event_id = '%s';
+        """ % (event_id))
+        rows = cur.fetchall()
+        all_user = []
+        user_name = []
+        for row in rows:
+            all_user.append(row[0])
+            user_name.append((row[0], row[1]))
+
+        absent_user = []
+        for au in all_user:
+            pre = False
+            for pu in present_user:
+                if au == pu:
+                    pre = True
+                    break
+            if pre == False:
+                for un in user_name:
+                    if au == un[0]:
+                        absent_user.append(un[1])
+                        break
         temp_time['absent_user'] = absent_user
+
         arbitrate_result.append(temp_time)
 
     conn.commit()
@@ -877,7 +925,15 @@ def select_people(group_id):
 
     return group_member
 
+
 def get_already_vote(event_id):
+    '''
+        This function returns people who have voted an event.
+        Input:
+            event_id: string
+        Output:
+            result: list
+    '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
@@ -892,10 +948,12 @@ def get_already_vote(event_id):
     rows = cur.fetchall()
     for row in rows:
         result.append(row[0])
+
     conn.commit()
     conn.close()
 
     return result
+
 
 def insert_member(user_id, user_name, group_id):
     '''
@@ -1038,7 +1096,15 @@ def get_user_attribute(user_id, event_id):
 
 
 def get_event_dead(event_id):
-    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+    '''
+        This function returns whether an event is dead.
+        Input:
+            event_id: string
+        Output:
+            dead: bool
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
     cur = conn.cursor()
 
     cur.execute("""
@@ -1047,25 +1113,47 @@ def get_event_dead(event_id):
     """ % (event_id))
 
     rows = cur.fetchall()
+    dead = rows[0][0]
 
     conn.close()
-    return rows[0][0]
+
+    return dead
+
 
 def get_time(time_id):
-    # time_id is integer
-    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+    '''
+        This function returns time_start and time_end of a time_id.
+        Input:
+            time_id: int
+        Output:
+            time_duration: list, [time_start, time_end]
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
     cur = conn.cursor()
+
     cur.execute("""
         SELECT time_start, time_end FROM time
         WHERE time_id = '%s';
     """ % (time_id))
+
     rows = cur.fetchall()
+    time_duration = [rows[0][0], rows[0][1]]
+
     conn.commit()
     conn.close()
-    return [rows[0][0], rows[0][1]]
+
+    return time_duration
+
 
 def check_and_end(time_date_now):
-    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+    '''
+        This function demonstrate the final time slot of an event.
+        Input:
+            time_date_now: list
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
     cur = conn.cursor()
 
     time_now = time_date_now[1]
@@ -1100,9 +1188,11 @@ def check_and_end(time_date_now):
             userstr = ""
             for i in get_already_vote(event_id):
                 userstr += i + "\n"
-            FlexMessage = json.load(open('normal_result.json', 'r', encoding='utf-8'))
+            FlexMessage = json.load(
+                open('normal_result.json', 'r', encoding='utf-8'))
             FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
             FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = start_time + "～" + end_time
             FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = userstr
             FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
-            line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+            line_bot_api.push_message(
+                group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
