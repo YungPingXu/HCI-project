@@ -400,14 +400,15 @@ def arbitrate_first(event_id):
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
-    cur.execute("""
-        SELECT choose.user_id, choose_date, choose_time_id FROM choose
+    cur.execute(""" 
+        SELECT choose.user_id, choose_date, choose_time_id, event_id FROM choose
         INNER JOIN (SELECT user_id FROM people
                     WHERE event_id = '%s'
                     AND must_attend = True
                     AND done = True) AS attend
-        ON choose.user_id = attend.user_id;
-    """ % (event_id))
+        ON choose.user_id = attend.user_id
+        WHERE event_id = '%s';
+    """ % (event_id, event_id))
 
     rows = cur.fetchall()
     print(rows)
