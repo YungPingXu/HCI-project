@@ -1273,6 +1273,19 @@ def check_and_end(time_date_now):
             line_bot_api.push_message(
                 group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
         else:
-            pass
+            FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
+            absent_set = []
+            for i in range(3):
+                FlexMessage["body"]["contents"][1]["contents"][i + 1]["contents"][1]["text"] = result[i]["date"] + " " + get_time(result[i]["time_id"])[i].strftime("%H:%M") + "\n參與人數共 " + result[i]["voted_number"] + " 人"
+                for j in result[i]["absent_user"]:
+                    absent_set.append(j)
+            absent_set = set(absent_set)
+            members = ""
+            for i in absent_set:
+                members += "@" + i + " "
+            FlexMessage["body"]["contents"][1]["contents"][4]["text"] = "請 " + members + "針對以上時段再次確認是否能夠參與此活動！"
+            FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
+            FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
+            line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
-# print(arbitrate_first("C1eUVjpp"))
+#print(arbitrate_first("5WokmaZt"))
