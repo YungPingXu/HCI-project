@@ -455,7 +455,7 @@ def settle():
             FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
             FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + "\n" + start_time + "～" + end_time
             FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = present_user_str
-            FlexMessage["body"]["contents"][1]["contents"][3]["contents"][1]["text"] = absent_user_str
+            FlexMessage["body"]["contents"][1]["contents"][2]["contents"][3]["text"] = absent_user_str
             line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
             return render_template("settle.html")
         else:
