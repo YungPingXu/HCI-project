@@ -1093,7 +1093,7 @@ def check_and_end(time_date_now):
         event_name = row[1]
         group_id = row[2]
         result = arbitrate_first(event_id)
-        print(result)
+        print(result, len(result))
         if len(result) == 1:
             result_date = result[0]["date"]
             result_time = get_time(result[0]["time_id"])
@@ -1110,3 +1110,4 @@ def check_and_end(time_date_now):
             line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
         else:
             pass
+print(arbitrate_first("C1eUVjpp"))
