@@ -1010,15 +1010,19 @@ def get_event_dead(event_id):
     conn.close()
     return rows[0][0]
 
-def check_and_end(current_time):
+def check_and_end(time_date_now):
     conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
     cur = conn.cursor()
+
+    time_now = time_date_now[1]
+    date_now = time_date_now[0]
 
     cur.execute("""
         SELECT event_id FROM event 
         WHERE time '%s' >= deadline_time
+        AND date '%s' = deadline_date
         AND dead = False;
-    """ % (current_time))
+    """ % (time_now, date_now))
 
     rows = cur.fetchall()
     for row in rows:
