@@ -1110,4 +1110,4 @@ def check_and_end(time_date_now):
             line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
         else:
             pass
-print(arbitrate_first("C1eUVjpp"))
+#print(arbitrate_first("C1eUVjpp"))
