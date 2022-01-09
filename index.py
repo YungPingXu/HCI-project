@@ -434,6 +434,19 @@ def display_result():
             return "event_id parameter does not exist"
     return redirect(url_for("index"))
 
+@app.route("/settle", methods=["GET"])  # 路由和處理函式配對
+def settle():
+    if request.method == "GET":
+        if "event_id" in request.values:
+            event_id = request.values["event_id"]
+            result = db_utils.arbitrate_second(event_id)[0]
+            return render_template("display-result.html", result=result)
+        #else:
+        #    return "this event_id does not exist"
+        else:
+            return "event_id parameter does not exist"
+    return redirect(url_for("index"))
+
 # don't touch this
 if __name__ == "__main__":
     db_utils.create_tables()

@@ -607,7 +607,7 @@ def arbitrate_second(event_id):
         Input:
             event_id: string
         Output:
-            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__, 'voted_number':__},...,{}]
+            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__, 'voted_number':__}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
@@ -1288,4 +1288,31 @@ def check_and_end(time_date_now):
             FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
             line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
-#print(arbitrate_first("5WokmaZt"))
+def test():
+    event_id = "3HyCHqhc"
+    event_name = "asgfasdfsadf"
+    group_id = "C36e166f739d14fffbd20c0ce7c772eef"
+    result = arbitrate_first("3HyCHqhc")
+    print(result, len(result))
+    FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
+    absent_set = []
+    #for i in range(3):
+    FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result[0]["date"] + " " + get_time(result[0]["time_id"])[0].strftime("%H:%M") + "\n參與人數共 " + str(result[0]["voted_number"]) + " 人"
+    for j in result[0]["absent_user"]:
+        absent_set.append(j)
+    FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = result[1]["date"] + " " + get_time(result[1]["time_id"])[0].strftime("%H:%M") + "\n參與人數共 " + str(result[1]["voted_number"]) + " 人"
+    for j in result[1]["absent_user"]:
+        absent_set.append(j)
+    FlexMessage["body"]["contents"][1]["contents"][3]["contents"][1]["text"] = result[2]["date"] + " " + get_time(result[2]["time_id"])[0].strftime("%H:%M") + "\n參與人數共 " + str(result[2]["voted_number"]) + " 人"
+    for j in result[2]["absent_user"]:
+        absent_set.append(j)
+    absent_set = set(absent_set)
+    members = ""
+    for i in absent_set:
+        members += "@" + i + " "
+    FlexMessage["body"]["contents"][1]["contents"][4]["text"] = "請 " + members + "針對以上時段再次確認是否能夠參與此活動！"
+    FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
+    FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
+    line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+
+test()
