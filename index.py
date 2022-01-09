@@ -441,7 +441,7 @@ def settle():
             event_id = request.values["event_id"]
             event_name = request.values["event_name"]
             group_id = request.values["group_id"]
-            result = db_utils.arbitrate_second(event_id)[0]
+            result = db_utils.arbitrate_second(event_id, db_utils.arbitrate_first(event_id))[0]
             result_date = result["date"]
             start_time = db_utils.get_time(result["time_id"])[0].strftime("%H:%M")
             end_time = db_utils.get_time(result["time_id"])[1].strftime("%H:%M")
