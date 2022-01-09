@@ -410,9 +410,9 @@ def insert_people(user_attribute):
     conn.close()
 
 
-def arbitrate(event_id):
+def arbitrate_first(event_id):
     '''
-        This function arbitrates an event.
+        This function arbitrates an event first time.
         Input:
             event_id: string
         Output:
@@ -507,8 +507,8 @@ def arbitrate(event_id):
             arbitrate_result = []
             for ots in ordered_time_slot:
                 temp_time = {}
-                temp_time['date'] = str(ots[0])
-                temp_time['time_id'] = ots[1]
+                temp_time['date'] = str(ots['choose_date'])
+                temp_time['time_id'] = ots['choose_time_id']
                 cur.execute("""
                     SELECT people.user_id, people.user_name FROM people
                     INNER JOIN (SELECT user_id FROM choose
@@ -522,10 +522,139 @@ def arbitrate(event_id):
                 for row in rows:
                     absent_user.append(row[1])
                 temp_time['absent_user'] = absent_user
+                arbitrate_result.append(temp_time)
+
             return arbitrate_result
 
     conn.commit()
     conn.close()
+
+
+def arbitrate_second(event_id):
+    '''
+        This function arbitrates an event second time.
+        Input:
+            event_id: string
+        Output:
+            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__},...,{}]
+    '''
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT choose.user_id, choose_date, choose_time_id FROM choose
+        INNER JOIN (SELECT user_id FROM people
+                    WHERE event_id = '%s'
+                    AND must_attend = True
+                    AND done = True) AS attend
+        ON choose.user_id = attend.user_id;
+    """ % (event_id))
+
+    rows = cur.fetchall()
+    result = []
+    for row in rows:
+        find = False
+        for re in result:
+            if re['choose_date'] == row[1] and re['choose_time_id'] == row[2]:
+                re['count'] += 1
+                find = True
+        if find == False:
+            time_section = {}
+            time_section['choose_date'] = row[1]
+            time_section['choose_time_id'] = row[2]
+            time_section['count'] = 1
+            result.append(time_section)
+
+    total_must_attend_user = 0
+    user_list = []
+    for row in rows:
+        check = False
+        for usr in user_list:
+            if row[0] == usr:
+                check = True
+                break
+        if check == False:
+            user_list.append(row[0])
+            total_must_attend_user += 1
+
+    cur.execute("""
+        SELECT user_id, choose_date, choose_time_id FROM choose 
+        WHERE event_id = '%s'; 
+    """ % (event_id))
+
+    rows = cur.fetchall()
+    total_user = 0
+    user_vote = []
+    for row in rows:
+        check = False
+        for usr in user_vote:
+            if usr == row[0]:
+                check = True
+                break
+        if check == False:
+            user_vote.append(row[0])
+            total_user += 1
+
+    ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
+
+    most_count = []
+    for i in range(len(ordered_result)):
+        if ordered_result[i]['count'] == ordered_result[0]['count']:
+            most_count.append(ordered_result[i])
+    ordered_time_slot = sorted(
+        most_count, key=itemgetter('choose_time_id', 'choose_date'))
+
+    arbitrate_result = []
+    cur.execute("""
+        SELECT preference FROM event
+        WHERE event_id = '%s';
+    """ % (event_id))
+    rows = cur.fetchall()
+    prefer = ''
+    for row in rows:
+        prefer = row[0]
+
+    if prefer == 'early':
+        temp_time = {}
+        temp_time['date'] = str(ordered_time_slot[0]['choose_date'])
+        temp_time['time_id'] = ordered_time_slot[0]['choose_time_id']
+        cur.execute("""
+            SELECT people.user_id, people.user_name FROM people
+            INNER JOIN (SELECT user_id FROM choose
+                        WHERE event_id = '%s'
+                        AND choose_date != '%s'
+                        AND choose_time_id != '%s') AS need_mention
+            ON people.user_id = need_mention.user_id
+        """ % (event_id, temp_time['date'], temp_time['time_id']))
+        rows = cur.fetchall()
+        absent_user = []
+        for row in rows:
+            absent_user.append(row[1])
+        temp_time['absent_user'] = absent_user
+        arbitrate_result.append(temp_time)
+    else:
+        temp_time = {}
+        temp_time['date'] = str(ordered_time_slot[-1]['choose_date'])
+        temp_time['time_id'] = ordered_time_slot[-1]['choose_time_id']
+        cur.execute("""
+            SELECT people.user_id, people.user_name FROM people
+            INNER JOIN (SELECT user_id FROM choose
+                        WHERE event_id = '%s'
+                        AND choose_date != '%s'
+                        AND choose_time_id != '%s') AS need_mention
+            ON people.user_id = need_mention.user_id
+        """ % (event_id, temp_time['date'], temp_time['time_id']))
+        rows = cur.fetchall()
+        absent_user = []
+        for row in rows:
+            absent_user.append(row[1])
+        temp_time['absent_user'] = absent_user
+        arbitrate_result.append(temp_time)
+
+    conn.commit()
+    conn.close()
+
+    return arbitrate_result
 
 
 def init_time():
