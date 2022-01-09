@@ -37,28 +37,22 @@ sched = BlockingScheduler()
 def timed_job():
     mention_list = database.db_utils.mention(get_Taiwan_time())
     print(mention_list)
-    send_list = []
-    send_list_user = []
+    send_list = {}
     for i in mention_list:
         tmp_send = []
         tmp_send.append(i[2]) # event_id
         tmp_send.append(i[3]) # group_id
         tmp_send.append(i[4]) # event_name
-        send_list.append(tmp_send)
-    for j in send_list:
-        event_id = j[0]
-        group_id = j[1]
-        tmp_user = []
-        for i in mention_list:
-            if i[2] == event_id and i[3] == group_id:
-                tmp_user.append(i[1])
-        send_list_user.append(tmp_user)
-    for i in range(len(send_list)):
+        tmp_send.append([])
+        send_list[i[2] + "," + i[3]] = tmp_send
+    for i in mention_list:
+        send_list[i[2] + "," + i[3]].append(i[1])
+    print(send_list)
+    for i in send_list:
         event_id = send_list[i][0]
         group_id = send_list[i][1]
         event_name = send_list[i][2]
-        user_name_list = []
-        user_name_list = send_list_user[i]
+        user_name_list = send_list[i][3]
         mention_user(group_id, user_name_list, event_name, event_id)
 
 sched.start()
