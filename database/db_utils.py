@@ -1307,13 +1307,15 @@ def check_and_end(time_date_now):
                 group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
 
-def test():
-    event_id = "3HyCHqhc"
-    event_name = "asgfasdfsadf"
-    group_id = "C36e166f739d14fffbd20c0ce7c772eef"
-    result = arbitrate_first("3HyCHqhc")
+def test(event_id):
+    #event_id = "3HyCHqhc"
+    #event_name = "asgfasdfsadf"
+    #group_id = "C36e166f739d14fffbd20c0ce7c772eef"
+    result = arbitrate_first(event_id)
     print(result, len(result))
-    FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
+    result = arbitrate_second(event_id)
+    print(result, len(result))
+    """FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
     absent_set = []
     # for i in range(3):
     FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result[0]["date"] + " " + \
@@ -1340,7 +1342,7 @@ def test():
     FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
     FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
     line_bot_api.push_message(
-        group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+        group_id, FlexSendMessage('Scheduling Bot', FlexMessage))"""
 
 
-test()
+test("LhJ5SeLP")
