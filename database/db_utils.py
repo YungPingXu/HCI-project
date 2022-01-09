@@ -1016,3 +1016,6 @@ def check_and_end(time_date_now):
         """ % (event_id))
     conn.commit()
     conn.close()
+
+    for row in rows:
+        arbitrate_first(row[0])
