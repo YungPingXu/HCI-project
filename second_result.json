@@ -88,7 +88,15 @@
                   "flex": 5,
                   "size": "sm",
                   "wrap": true
-                },
+                }
+              ],
+              "spacing": "none",
+              "margin": "sm"
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "contents": [
                 {
                   "type": "text",
                   "text": "【缺席成員】",
