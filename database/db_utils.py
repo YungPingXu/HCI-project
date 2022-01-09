@@ -490,8 +490,9 @@ def arbitrate_first(event_id):
                 cur.execute("""
                     SELECT count(distinct user_id) FROM choose
                     WHERE choose_date = date '%s'
-                    AND choose_time_id = %s;
-                """ % (str(ordered_max_time_slot[0]['choose_date']), ordered_max_time_slot[0]['choose_time_id']))
+                    AND choose_time_id = %s
+                    AND event_id = '%s';
+                """ % (str(ordered_max_time_slot[0]['choose_date']), ordered_max_time_slot[0]['choose_time_id'], event_id))
                 rows = cur.fetchall()
                 voted_number = 0
                 for row in rows:
@@ -507,8 +508,9 @@ def arbitrate_first(event_id):
                 cur.execute("""
                     SELECT count(distinct user_id) FROM choose
                     WHERE choose_date = date '%s'
-                    AND choose_time_id = %s;
-                """ % (str(ordered_max_time_slot[-1]['choose_date']), ordered_max_time_slot[-1]['choose_time_id']))
+                    AND choose_time_id = %s
+                    AND event_id = '%s';
+                """ % (str(ordered_max_time_slot[-1]['choose_date']), ordered_max_time_slot[-1]['choose_time_id'], event_id))
                 rows = cur.fetchall()
                 voted_number = 0
                 for row in rows:
@@ -579,8 +581,9 @@ def arbitrate_first(event_id):
                 cur.execute("""
                     SELECT count(distinct user_id) FROM choose
                     WHERE choose_date = date '%s'
-                    AND choose_time_id = %s;
-                """ % (temp_time['date'], temp_time['time_id']))
+                    AND choose_time_id = %s
+                    AND event_id = '%s';
+                """ % (temp_time['date'], temp_time['time_id'], event_id))
                 rows = cur.fetchall()
                 voted_number = 0
                 for row in rows:
@@ -727,8 +730,9 @@ def arbitrate_second(event_id):
         cur.execute("""
             SELECT count(distinct user_id) FROM choose
             WHERE choose_date = date '%s'
-            AND choose_time_id = %s;
-        """ % (temp_time['date'], temp_time['time_id']))
+            AND choose_time_id = %s
+            AND event_id = '%s';
+        """ % (temp_time['date'], temp_time['time_id'], event_id))
         rows = cur.fetchall()
         voted_number = 0
         for row in rows:
@@ -779,8 +783,9 @@ def arbitrate_second(event_id):
         cur.execute("""
             SELECT count(distinct user_id) FROM choose
             WHERE choose_date = date '%s'
-            AND choose_time_id = %s;
-        """ % (temp_time['date'], temp_time['time_id']))
+            AND choose_time_id = %s
+            AND event_id = '%s';
+        """ % (temp_time['date'], temp_time['time_id'], event_id))
         rows = cur.fetchall()
         voted_number = 0
         for row in rows:
