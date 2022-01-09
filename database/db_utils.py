@@ -218,7 +218,7 @@ def mention(time_date_now):
         Input:
             time_date_now: list
         Output:
-            mention_user: list, [{'user_id':__, 'user_name':__, 'event_id':__, 'group_id':__},...,{}]
+            mention_user: list, [['user_id', 'user_name', 'event_id', 'group_id', 'event_name'],...,[]]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
