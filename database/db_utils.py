@@ -486,12 +486,12 @@ def arbitrate_first(event_id):
                 conn.commit()
                 conn.close()
                 arbitrate_result.append({'date': str(ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': []})
+                print(arbitrate_result)
                 return arbitrate_result
             else:
                 conn.commit()
                 conn.close()
                 arbitrate_result.append({'date': str(ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []})
-                print(arbitrate_result)
                 return arbitrate_result
         else:
             first_three = []
