@@ -1353,9 +1353,8 @@ def check_and_end(time_date_now):
             FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
             absent_set = []
             for i in range(3):
-                FlexMessage["body"]["contents"][1]["contents"][i + 1]["contents"][1]["text"] = result[i]["date"] + " " + \
-                    get_time(result[i]["time_id"])[i].strftime(
-                        "%H:%M") + "\n參與人數共 " + str(result[i]["voted_number"]) + " 人"
+                FlexMessage["body"]["contents"][1]["contents"][i + 1]["contents"][1]["text"] = result[i]["date"] + "\n" + \
+                    get_time(result[i]["time_id"])[0].strftime("%H:%M") + "～" + get_time(result[i]["time_id"])[1].strftime("%H:%M") + "\n參與人數共 " + str(result[i]["voted_number"]) + " 人"
                 for j in result[i]["absent_user"]:
                     absent_set.append(j)
             absent_set = set(absent_set)
@@ -1409,4 +1408,4 @@ def test(event_id):
         group_id, FlexSendMessage('Scheduling Bot', FlexMessage))"""
 
 
-test("pjT2gi2R")
+test("ijBGaxjV")
