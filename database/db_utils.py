@@ -1094,7 +1094,7 @@ def check_and_end(time_date_now):
         group_id = row[2]
         result = arbitrate_first(event_id)
         if len(result) == 1:
-            result_time = get_time[result[0]["time_id"]]
+            result_time = get_time(result[0]["time_id"])
             start_time = result_time[0]
             end_time = result_time[1]
             userstr = ""
