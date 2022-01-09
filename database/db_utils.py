@@ -1100,8 +1100,9 @@ def check_and_end(time_date_now):
             userstr = ""
             for i in get_already_vote(event_id):
                 userstr += i + "\n"
-            FlexMessage = json.load(open('display_result.json', 'r', encoding='utf-8'))
-            message = "結果公告!!\n活動名稱：" + event_name + "\n時間：" + result[0]["date"] + " " 
-            + start_time + "～" + end_time + "\n" + userstr + "全員都可參與～"
-            FlexMessage["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = userstr + "尚未填寫「" + event_name + "」意願時間，請盡速填寫!!"
+            FlexMessage = json.load(open('normal_result.json', 'r', encoding='utf-8'))
+            FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
+            FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = start_time + "～" + end_time
+            FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = userstr
+            FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
             line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
