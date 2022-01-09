@@ -410,6 +410,7 @@ def arbitrate_first(event_id):
     """ % (event_id))
 
     rows = cur.fetchall()
+    print(rows)
     result = []
     for row in rows:
         find = False
@@ -1018,4 +1019,4 @@ def check_and_end(time_date_now):
     conn.close()
 
     for row in rows:
-        print(arbitrate_first(row[0]))
+        arbitrate_first(row[0])
