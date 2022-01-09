@@ -493,27 +493,47 @@ def arbitrate_first(event_id):
                 arbitrate_result.append({'date': str(ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []})
                 return arbitrate_result
         else:
-            ordered_time_slot = sorted(
-                ordered_result, key=itemgetter('count', 'choose_time_id', 'choose_date'))
+            ordered_time_slot = ordered_result
             print(ordered_time_slot)
             arbitrate_result = []
             for ots in ordered_time_slot:
                 temp_time = {}
                 temp_time['date'] = str(ots['choose_date'])
                 temp_time['time_id'] = ots['choose_time_id']
+                
                 cur.execute("""
-                    SELECT people.user_id, people.user_name FROM people
-                    INNER JOIN (SELECT user_id FROM choose
-                                WHERE event_id = '%s'
-                                AND choose_date != '%s'
-                                AND choose_time_id != '%s') AS need_mention
-                    ON people.user_id = need_mention.user_id
+                    SELECT user_id FROM choose
+                    WHERE event_id = '%s'
+                    AND choose_date = date '%s'
+                    AND choose_time_id = time '%s';
                 """ % (event_id, temp_time['date'], temp_time['time_id']))
                 rows = cur.fetchall()
-                absent_user = []
+                present_user = []
                 for row in rows:
-                    absent_user.append(row[1])
+                    present_user.append(row[0])
+                
+                cur.execute("""
+                    SELECT user_id, user_name FROM people
+                    WHERE event_id = '%s';
+                """ % (event_id))
+                rows = cur.fetchall()
+                all_user = []
+                user_name = []
+                for row in rows:
+                    all_user.append(row[0])
+                    user_name.append((row[0], row[1]))
+
+                absent_user = []
+                for au in all_user:
+                    pre = False
+                    for pu in present_user:
+                        if au == pu:
+                            pre = True
+                            break
+                    if pre == False:
+                        absent_user.append(row[1])
                 temp_time['absent_user'] = absent_user
+
                 arbitrate_result.append(temp_time)
                 if len(arbitrate_result) == 3:
                     break
