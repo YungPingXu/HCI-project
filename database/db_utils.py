@@ -224,7 +224,6 @@ def mention(time_date_now):
                             password=password, host=host, port=port)
     cur = conn.cursor()
 
-    #time_date_now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()).split()
     time_now = time_date_now[1]
     date_now = time_date_now[0]
     cur.execute("""
