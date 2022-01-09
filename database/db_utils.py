@@ -1181,7 +1181,9 @@ def check_and_end(time_date_now):
         event_name = row[1]
         group_id = row[2]
         result = arbitrate_first(event_id)
+        print(result, len(result))
         if len(result) == 1:
+            result_date = result[0]["date"]
             result_time = get_time(result[0]["time_id"])
             start_time = result_time[0].strftime("%H:%M")
             end_time = result_time[1].strftime("%H:%M")
@@ -1191,8 +1193,13 @@ def check_and_end(time_date_now):
             FlexMessage = json.load(
                 open('normal_result.json', 'r', encoding='utf-8'))
             FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
-            FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = start_time + "～" + end_time
+            FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + \
+                "\n" + start_time + "～" + end_time
             FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = userstr
             FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
             line_bot_api.push_message(
                 group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+        else:
+            pass
+
+# print(arbitrate_first("C1eUVjpp"))
