@@ -425,8 +425,9 @@ def arbitrate_first(event_id):
             time_section['choose_time_id'] = row[2]
             time_section['count'] = 1
             result.append(time_section)
+            print(time_section)
 
-    print(result)
+    #print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
