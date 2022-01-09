@@ -442,7 +442,7 @@ def arbitrate_first(event_id):
             total_must_attend_user += 1
 
     cur.execute("""
-        SELECT user_id, choose_date, choose_time_id FROM choose 
+        SELECT user_id FROM people 
         WHERE event_id = '%s'; 
     """ % (event_id))
 
@@ -495,6 +495,7 @@ def arbitrate_first(event_id):
         else:
             ordered_time_slot = sorted(
                 ordered_result, key=itemgetter('count', 'choose_time_id', 'choose_date'))
+            print(ordered_time_slot)
             arbitrate_result = []
             for ots in ordered_time_slot:
                 temp_time = {}
