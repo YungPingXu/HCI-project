@@ -428,7 +428,7 @@ def arbitrate_first(event_id):
             result.append(time_section)
             #print(time_section)
 
-    print(result)
+    #print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
@@ -460,6 +460,7 @@ def arbitrate_first(event_id):
             total_user += 1
 
     ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
+    print(ordered_result)
     if ordered_result[0]['count'] < total_must_attend_user / 2:
         conn.commit()
         conn.close()
