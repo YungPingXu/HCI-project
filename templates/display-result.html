@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>投票結果 - {{result.event_name}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            font-family: "微軟正黑體";
+            color: black;
+        }
+
+        html {
+            min-height: 100%;
+            position: relative;
+        }
+
+        body {
+            margin: 0px;
+            padding: 0px;
+            min-height: 100%;
+        }
+
+        header {
+            text-align: center;
+            font-size: 35px;
+            padding-top: 35px;
+        }
+
+        .upper {
+            font-size: 25px;
+            margin: 0 auto;
+            margin-top: 20px;
+            width: 310px;
+            text-align: center;
+        }
+        .input {
+            font-size: 20px;
+            border-radius: 10px;
+            background-color: #e1e1e1;
+            border: none;
+            width: 250px;
+            padding-left: 10px;
+        }
+        .grid-div {
+            border-radius: 10px;
+            background-color: gray;
+            width: 65px;
+            height: 65px;
+            margin: 5px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 65px; /* The same as your div height */
+            font-size: 25px;
+        }
+        .selector-div {
+            font-size: 20px;
+            margin: 0 auto;
+            margin-top: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-right: 10px;
+            text-align: center;
+            overflow: auto;
+            max-width: 310px;
+            height: 300px;
+            border: black 1px solid;
+        }
+        .select-grid {
+            width: 50px;
+            height: 50px;
+            padding-top: 20px;
+        }
+        .time-grid {
+            width: 50px;
+            height: 50px;
+            vertical-align: top;
+        }
+        .note {
+            font-size: 15px;
+        }
+        .submit-div {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .submit-button {
+            font-size: 25px;
+            background-color: #83c1ff;
+            border-radius: 10px;
+            border: none;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+        .submit-button:hover {
+            border: black 2px solid;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body onload="initialize();">
+    <header>
+        {{result.event_name}}
+        <input type="text" id="event-id" value="{{result.event_id}}" hidden>
+        <!-- this value is to record event_id -->
+    </header>
+    <div class="upper">
+        共 {{result.vote_number}} 人參與投票
+        <div style="display: none;" id="vote_info">
+            {% for i in result.display_vote %}
+                <input type="text" class="vote_info" value="{{i}}" hidden>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="selector-div">
+        <table style="border-collapse:separate; border-spacing:10px 0px;">
+            <tr>
+                <td class="grid"></td>
+                {% for date in result.date_list %}
+                    <td class="grid">{{date.0}}</td>
+                {% endfor %}
+            </tr>
+            {% for time in result.time_list %}
+                <tr>
+                    <td class="time-grid">{{time.0}}</td>
+                    {% for date in result.date_list %}
+                        <td class="select-grid"><div class="grid-div" id="{{date.1}},{{time.1}}"><div></td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="submit-div">
+        <button class="submit-button" onclick="modify_vote()">我要修改</button>
+    </div>
+    <script>
+        function modify_vote() {
+            var event_id = document.getElementById("event-id").value;
+            window.location.href = "/vote?event_id=" + event_id;
+        }
+        function initialize() {
+            var vote_info = document.getElementsByClassName("vote_info");
+            for(var i = 0; i < vote_info.length; i++) {
+                var tmp = vote_info[i].value.split(",");
+                var x = document.getElementById(tmp[0] + "," + tmp[1]).innerHTML = tmp[2];
+                document.getElementById(tmp[0] + "," + tmp[1]).style.backgroundColor = "#4f88f8";
+            }
+        }
+    </script>
+</body>
+
+</html>

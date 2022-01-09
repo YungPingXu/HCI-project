@@ -290,11 +290,11 @@ def result_sofar(event_id):
     return result
 
 
-def result_final(deadline):
+def result_final(event_id):
     '''
-        This function returns the result of events that up to deadline.
+        This function returns the result of a event that up to deadline.
         Input:
-            deadline: list
+            event_id: string
         Output:
             result: list, contains below four parameters
                 event_id: string
@@ -306,75 +306,54 @@ def result_final(deadline):
                             password=password, host=host, port=port)
     cur = conn.cursor()
 
-    deadline_time = deadline[1]
-    deadline_date = deadline[0]
     cur.execute("""
-        SELECT event_id FROM event 
-        WHERE deadline_time = '%s'
-        AND deadline_date = '%s';
-    """ % (deadline_time, deadline_date))
+        SELECT choose_date, choose_time_id FROM choose 
+        WHERE event_id = '%s' 
+    """ % (event_id))
 
-    result = []
-    events = cur.fetchall()
-    for event in events:
-        event_id = event[0]
+    rows = cur.fetchall()
+    event_time_result = []
+    for row in rows:
+        find = False
+        for re in event_time_result:
+            if re['date'] == row[0] and re['time_id'] == row[1]:
+                re['count'] += 1
+                find = True
+        if find == False:
+            time_section = {}
+            time_section['date'] = row[0]
+            time_section['time_id'] = row[1]
+            time_section['count'] = 1
+            event_time_result.append(time_section)
 
-        cur.execute("""
-            UPDATE event SET dead = True 
-            WHERE event_id = '%s' 
-        """ % (event_id))
+    cur.execute("""
+        SELECT user_id, choose_date, choose_time_id FROM choose 
+        WHERE event_id = '%s'; 
+    """ % (event_id))
 
-        cur.execute("""
-            SELECT choose_date, choose_time_id FROM choose 
-            WHERE event_id = '%s' 
-        """ % (event_id))
+    rows = cur.fetchall()
+    event_time_user = []
+    voted_number = 0
+    user_vote = []
+    for row in rows:
+        user_choose = {}
+        user_choose['user_id'] = row[0]
+        user_choose['choose_date'] = row[1]
+        user_choose['choose_time_id'] = row[2]
+        event_time_user.append(user_choose)
 
-        rows = cur.fetchall()
-        event_time_result = []
-        for row in rows:
-            find = False
-            for re in event_time_result:
-                if re['date'] == row[0] and re['time_id'] == row[1]:
-                    re['count'] += 1
-                    find = True
-            if find == False:
-                time_section = {}
-                time_section['date'] = row[0]
-                time_section['time_id'] = row[1]
-                time_section['count'] = 1
-                event_time_result.append(time_section)
-
-        cur.execute("""
-            SELECT user_id, choose_date, choose_time_id FROM choose 
-            WHERE event_id = '%s'; 
-        """ % (event_id))
-
-        rows = cur.fetchall()
-        event_time_user = []
-        voted_number = 0
-        user_vote = []
-        for row in rows:
-            user_choose = {}
-            user_choose['user_id'] = row[0]
-            user_choose['choose_date'] = row[1]
-            user_choose['choose_time_id'] = row[2]
-            event_time_user.append(user_choose)
-
-            check = False
-            for usr in user_vote:
-                if usr == row[0]:
-                    check = True
-                    break
-            if check == False:
-                user_vote.append(row[0])
-                voted_number += 1
-
-        result.append([event_id, event_time_result,
-                      event_time_user, voted_number])
+        check = False
+        for usr in user_vote:
+            if usr == row[0]:
+                check = True
+                break
+        if check == False:
+            user_vote.append(row[0])
+            voted_number += 1
 
     conn.close()
 
-    return result
+    return [event_id, event_time_result, event_time_user, voted_number]
 
 
 def insert_people(user_attribute):
