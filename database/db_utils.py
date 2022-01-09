@@ -635,7 +635,6 @@ def arbitrate_second(event_id, first_result):
             if re['choose_date'] == str(row[1]) and re['choose_time_id'] == row[2]:
                 re['count'] += 1
 
-    print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
@@ -1345,4 +1344,4 @@ def test(event_id):
         group_id, FlexSendMessage('Scheduling Bot', FlexMessage))"""
 
 
-test("LhJ5SeLP")
+test("pjT2gi2R")
