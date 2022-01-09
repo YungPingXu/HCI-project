@@ -26,7 +26,7 @@ def mention_user(group_id, user_name_list, event_name, event_id):
     for i in user_name_list:
         user_name += "@" + i + " "
     FlexMessage = json.load(open('mention.json', 'r', encoding='utf-8'))
-    FlexMessage["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = user_name + event_name + "活動尚未填寫 請盡速填寫!!"
+    FlexMessage["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = user_name + "尚未填寫「" + event_name + "」意願時間，請盡速填寫!!"
     FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
     FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_vote?event_id=" + event_id
     line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
