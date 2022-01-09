@@ -196,7 +196,7 @@ def insert_choose(user_choose):
 
 def delete_choose_rows(user_delete):
     '''
-        This function deletes the rows of table choose 
+        This function deletes the rows of table choose
         when a user wants to change his/her choices.
         Input:
             user_delete: list
@@ -209,7 +209,7 @@ def delete_choose_rows(user_delete):
     event_id = user_delete[1]
 
     cur.execute("""
-        DELETE FROM choose 
+        DELETE FROM choose
         WHERE user_id = '%s'
         AND event_id = '%s';
     """ % (user_id, event_id))
@@ -272,8 +272,8 @@ def result_sofar(event_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT choose_date, choose_time_id FROM choose 
-        WHERE event_id = '%s' 
+        SELECT choose_date, choose_time_id FROM choose
+        WHERE event_id = '%s'
     """ % (event_id))
 
     rows = cur.fetchall()
@@ -313,8 +313,8 @@ def result_final(event_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT choose_date, choose_time_id FROM choose 
-        WHERE event_id = '%s' 
+        SELECT choose_date, choose_time_id FROM choose
+        WHERE event_id = '%s'
     """ % (event_id))
 
     rows = cur.fetchall()
@@ -333,8 +333,8 @@ def result_final(event_id):
             event_time_result.append(time_section)
 
     cur.execute("""
-        SELECT user_id, choose_date, choose_time_id FROM choose 
-        WHERE event_id = '%s'; 
+        SELECT user_id, choose_date, choose_time_id FROM choose
+        WHERE event_id = '%s';
     """ % (event_id))
 
     rows = cur.fetchall()
@@ -401,12 +401,12 @@ def arbitrate_first(event_id):
         Input:
             event_id: string
         Output:
-            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__},...,{}]
+            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__, 'voted_number':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
-    cur.execute(""" 
+    cur.execute("""
         SELECT choose.user_id, choose_date, choose_time_id, event_id FROM choose
         INNER JOIN (SELECT user_id FROM people
                     WHERE event_id = '%s'
@@ -444,8 +444,8 @@ def arbitrate_first(event_id):
             total_must_attend_user += 1
 
     cur.execute("""
-        SELECT user_id FROM people 
-        WHERE event_id = '%s'; 
+        SELECT user_id FROM people
+        WHERE event_id = '%s';
     """ % (event_id))
 
     rows = cur.fetchall()
@@ -466,7 +466,7 @@ def arbitrate_first(event_id):
     if ordered_result[0]['count'] < total_must_attend_user / 2:
         conn.commit()
         conn.close()
-        return [{'date': '', 'time_id': -1, 'absent_user': []}]
+        return [{'date': '', 'time_id': -1, 'absent_user': [], 'voted_number':0}]
     else:
         if ordered_result[0]['count'] == total_user:
             max_time_slot = []
@@ -475,6 +475,7 @@ def arbitrate_first(event_id):
                     max_time_slot.append(ore)
             ordered_max_time_slot = sorted(
                 max_time_slot, key=itemgetter('choose_time_id', 'choose_date'))
+
             cur.execute("""
                 SELECT preference FROM event
                 WHERE event_id = '%s';
@@ -483,21 +484,55 @@ def arbitrate_first(event_id):
             prefer = ''
             for row in rows:
                 prefer = row[0]
+
             arbitrate_result = []
             if prefer == 'early':
+                cur.execute("""
+                    SELECT count(user_id) FROM choose
+                    WHERE choose_date = date '%s'
+                    AND choose_time_id = %s;
+                """ % (str(ordered_max_time_slot[0]['choose_date']), ordered_max_time_slot[0]['choose_time_id']))
+                rows = cur.fetchall()
+                voted_number = 0
+                for row in rows:
+                    voted_number = row[0]
+
                 conn.commit()
                 conn.close()
+
                 arbitrate_result.append({'date': str(
-                    ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': []})
+                    ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': [], 'voted_number': voted_number})
                 return arbitrate_result
             else:
+                cur.execute("""
+                    SELECT count(user_id) FROM choose
+                    WHERE choose_date = date '%s'
+                    AND choose_time_id = %s;
+                """ % (str(ordered_max_time_slot[-1]['choose_date']), ordered_max_time_slot[-1]['choose_time_id']))
+                rows = cur.fetchall()
+                voted_number = 0
+                for row in rows:
+                    voted_number = row[0]
+
                 conn.commit()
                 conn.close()
                 arbitrate_result.append({'date': str(
-                    ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []})
+                    ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': [], 'voted_number': voted_number})
                 return arbitrate_result
         else:
+            cur.execute("""
+                SELECT preference FROM event
+                WHERE event_id = '%s';
+            """ % (event_id))
+            rows = cur.fetchall()
+            prefer = ''
+            for row in rows:
+                prefer = row[0]
+
             ordered_time_slot = ordered_result
+            if prefer == 'late':
+                ordered_time_slot = sorted(
+                    ordered_result, key=lambda k: (-k['count'], -k['choose_time_id'], k['choose_date']))
 
             arbitrate_result = []
             for ots in ordered_time_slot:
@@ -541,6 +576,17 @@ def arbitrate_first(event_id):
                                 break
                 temp_time['absent_user'] = absent_user
 
+                cur.execute("""
+                    SELECT count(user_id) FROM choose
+                    WHERE choose_date = date '%s'
+                    AND choose_time_id = %s;
+                """ % (temp_time['date'], temp_time['time_id']))
+                rows = cur.fetchall()
+                voted_number = 0
+                for row in rows:
+                    voted_number = row[0]
+                temp_time['voted_number'] = voted_number
+
                 arbitrate_result.append(temp_time)
 
                 if len(arbitrate_result) == 3:
@@ -558,12 +604,12 @@ def arbitrate_second(event_id):
         Input:
             event_id: string
         Output:
-            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__},...,{}]
+            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__, 'voted_number':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
-    cur.execute(""" 
+    cur.execute("""
         SELECT choose.user_id, choose_date, choose_time_id, event_id FROM choose
         INNER JOIN (SELECT user_id FROM people
                     WHERE event_id = '%s'
@@ -601,8 +647,8 @@ def arbitrate_second(event_id):
             total_must_attend_user += 1
 
     cur.execute("""
-        SELECT user_id FROM people 
-        WHERE event_id = '%s'; 
+        SELECT user_id FROM people
+        WHERE event_id = '%s';
     """ % (event_id))
 
     rows = cur.fetchall()
@@ -678,6 +724,17 @@ def arbitrate_second(event_id):
                         break
         temp_time['absent_user'] = absent_user
 
+        cur.execute("""
+            SELECT count(user_id) FROM choose
+            WHERE choose_date = date '%s'
+            AND choose_time_id = %s;
+        """ % (temp_time['date'], temp_time['time_id']))
+        rows = cur.fetchall()
+        voted_number = 0
+        for row in rows:
+            voted_number = row[0]
+        temp_time['voted_number'] = voted_number
+
         arbitrate_result.append(temp_time)
     else:
         temp_time = {}
@@ -718,6 +775,17 @@ def arbitrate_second(event_id):
                         absent_user.append(un[1])
                         break
         temp_time['absent_user'] = absent_user
+
+        cur.execute("""
+            SELECT count(user_id) FROM choose
+            WHERE choose_date = date '%s'
+            AND choose_time_id = %s;
+        """ % (temp_time['date'], temp_time['time_id']))
+        rows = cur.fetchall()
+        voted_number = 0
+        for row in rows:
+            voted_number = row[0]
+        temp_time['voted_number'] = voted_number
 
         arbitrate_result.append(temp_time)
 
@@ -1108,7 +1176,7 @@ def get_event_dead(event_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT dead FROM event 
+        SELECT dead FROM event
         WHERE event_id = '%s';
     """ % (event_id))
 
@@ -1160,7 +1228,7 @@ def check_and_end(time_date_now):
     date_now = time_date_now[0]
 
     cur.execute("""
-        SELECT event_id, event_name, group_id FROM event 
+        SELECT event_id, event_name, group_id FROM event
         WHERE time '%s' >= deadline_time
         AND date '%s' = deadline_date
         AND dead = False;
@@ -1171,7 +1239,7 @@ def check_and_end(time_date_now):
         event_id = row[0]
         cur.execute("""
             UPDATE event SET dead = True
-            WHERE event_id = '%s' 
+            WHERE event_id = '%s'
         """ % (event_id))
     conn.commit()
     conn.close()
