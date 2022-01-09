@@ -451,7 +451,7 @@ def settle():
             absent_user_str = ""
             for i in result["absent_user"]:
                 absent_user_str += i + "\n"
-            FlexMessage = json.load(open('second.json', 'r', encoding='utf-8'))
+            FlexMessage = json.load(open('second_result.json', 'r', encoding='utf-8'))
             FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
             FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + "\n" + start_time + "～" + end_time
             FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = present_user_str
