@@ -5,7 +5,7 @@
       "url": "https://cdn-icons-png.flaticon.com/512/3770/3770792.png",
       "size": "full",
       "aspectRatio": "20:13",
-      "aspectMode": "cover",
+      "aspectMode": "fit",
       "action": {
         "type": "uri",
         "uri": "http://linecorp.com/"
