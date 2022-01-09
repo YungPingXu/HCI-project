@@ -488,7 +488,7 @@ def arbitrate_first(event_id):
             arbitrate_result = []
             if prefer == 'early':
                 cur.execute("""
-                    SELECT count(user_id) FROM choose
+                    SELECT count(distinct user_id) FROM choose
                     WHERE choose_date = date '%s'
                     AND choose_time_id = %s;
                 """ % (str(ordered_max_time_slot[0]['choose_date']), ordered_max_time_slot[0]['choose_time_id']))
@@ -505,7 +505,7 @@ def arbitrate_first(event_id):
                 return arbitrate_result
             else:
                 cur.execute("""
-                    SELECT count(user_id) FROM choose
+                    SELECT count(distinct user_id) FROM choose
                     WHERE choose_date = date '%s'
                     AND choose_time_id = %s;
                 """ % (str(ordered_max_time_slot[-1]['choose_date']), ordered_max_time_slot[-1]['choose_time_id']))
@@ -577,7 +577,7 @@ def arbitrate_first(event_id):
                 temp_time['absent_user'] = absent_user
 
                 cur.execute("""
-                    SELECT count(user_id) FROM choose
+                    SELECT count(distinct user_id) FROM choose
                     WHERE choose_date = date '%s'
                     AND choose_time_id = %s;
                 """ % (temp_time['date'], temp_time['time_id']))
@@ -725,7 +725,7 @@ def arbitrate_second(event_id):
         temp_time['absent_user'] = absent_user
 
         cur.execute("""
-            SELECT count(user_id) FROM choose
+            SELECT count(distinct user_id) FROM choose
             WHERE choose_date = date '%s'
             AND choose_time_id = %s;
         """ % (temp_time['date'], temp_time['time_id']))
@@ -777,7 +777,7 @@ def arbitrate_second(event_id):
         temp_time['absent_user'] = absent_user
 
         cur.execute("""
-            SELECT count(user_id) FROM choose
+            SELECT count(distinct user_id) FROM choose
             WHERE choose_date = date '%s'
             AND choose_time_id = %s;
         """ % (temp_time['date'], temp_time['time_id']))
