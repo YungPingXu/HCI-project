@@ -3,10 +3,16 @@ from dotenv import load_dotenv
 import os
 import time
 from operator import itemgetter
-
+import json
+from linebot import LineBotApi
+from linebot.models import *
+from linebot.models import FlexSendMessage, TextSendMessage
 
 ### don't touch ###
 load_dotenv()
+# Channel Access Token
+line_bot_api_token = os.getenv("line_bot_api_token")
+line_bot_api = LineBotApi(line_bot_api_token)
 database = os.getenv("database")
 user = os.getenv("user")
 password = os.getenv("password")
@@ -871,6 +877,25 @@ def select_people(group_id):
 
     return group_member
 
+def get_already_vote(event_id):
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT user_name FROM people
+        WHERE event_id = '%s'
+        AND done = True;
+    """ % (event_id))
+
+    result = []
+    rows = cur.fetchall()
+    for row in rows:
+        result.append(row[0])
+    conn.commit()
+    conn.close()
+
+    return result
 
 def insert_member(user_id, user_name, group_id):
     '''
@@ -1026,6 +1051,19 @@ def get_event_dead(event_id):
     conn.close()
     return rows[0][0]
 
+def get_time(time_id):
+    # time_id is integer
+    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT time_start, time_end FROM time
+        WHERE time_id = '%s';
+    """ % (time_id))
+    rows = cur.fetchall()
+    conn.commit()
+    conn.close()
+    return [rows[0][0], rows[0][1]]
+
 def check_and_end(time_date_now):
     conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
     cur = conn.cursor()
@@ -1034,7 +1072,7 @@ def check_and_end(time_date_now):
     date_now = time_date_now[0]
 
     cur.execute("""
-        SELECT event_id FROM event 
+        SELECT event_id, event_name, group_id FROM event 
         WHERE time '%s' >= deadline_time
         AND date '%s' = deadline_date
         AND dead = False;
@@ -1051,4 +1089,19 @@ def check_and_end(time_date_now):
     conn.close()
 
     for row in rows:
-        arbitrate_first(row[0])
+        event_id = row[0]
+        event_name = row[1]
+        group_id = row[2]
+        result = arbitrate_first(event_id)
+        if len(result) == 1:
+            result_time = get_time[result[0]["time_id"]]
+            start_time = result_time[0]
+            end_time = result_time[1]
+            userstr = ""
+            for i in get_already_vote(event_id):
+                userstr += i + "\n"
+            FlexMessage = json.load(open('display_result.json', 'r', encoding='utf-8'))
+            message = "結果公告!!\n活動名稱：" + event_name + "\n時間：" + result[0]["date"] + " " 
+            + start_time + "～" + end_time + "\n" + userstr + "全員都可參與～"
+            FlexMessage["body"]["contents"][0]["contents"][0]["contents"][0]["text"] = userstr + "尚未填寫「" + event_name + "」意願時間，請盡速填寫!!"
+            line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
