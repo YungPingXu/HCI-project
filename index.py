@@ -439,10 +439,25 @@ def settle():
     if request.method == "GET":
         if "event_id" in request.values:
             event_id = request.values["event_id"]
+            event_name = request.values["event_name"]
+            group_id = request.values["group_id"]
             result = db_utils.arbitrate_second(event_id)[0]
-            return render_template("display-result.html", result=result)
-        #else:
-        #    return "this event_id does not exist"
+            result_date = result["date"]
+            start_time = db_utils.get_time(result["time_id"])[0].strftime("%H:%M")
+            end_time = db_utils.get_time(result["time_id"])[1].strftime("%H:%M")
+            present_user_str = ""
+            for i in result["present_user"]:
+                present_user_str += i + "\n"
+            absent_user_str = ""
+            for i in result["absent_user"]:
+                absent_user_str += i + "\n"
+            FlexMessage = json.load(open('second.json', 'r', encoding='utf-8'))
+            FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
+            FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + "\n" + start_time + "～" + end_time
+            FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = present_user_str
+            FlexMessage["body"]["contents"][1]["contents"][3]["contents"][1]["text"] = absent_user_str
+            line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+            return render_template("settle.html")
         else:
             return "event_id parameter does not exist"
     return redirect(url_for("index"))

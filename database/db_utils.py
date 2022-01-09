@@ -1366,6 +1366,7 @@ def check_and_end(time_date_now):
                 members + "針對以上時段再次確認是否能夠參與此活動！"
             FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
             FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
+            FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/settle?event_id=" + event_id + "&event_name=" + event_name + "&group_id=" + group_id 
             line_bot_api.push_message(
                 group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
