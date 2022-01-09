@@ -411,9 +411,10 @@ def arbitrate_first(event_id):
     """ % (event_id, event_id))
 
     rows = cur.fetchall()
-    print(rows)
+    #print(rows)
     result = []
     for row in rows:
+        #print(row)
         find = False
         for re in result:
             if re['choose_date'] == row[1] and re['choose_time_id'] == row[2]:
@@ -425,7 +426,9 @@ def arbitrate_first(event_id):
             time_section['choose_time_id'] = row[2]
             time_section['count'] = 1
             result.append(time_section)
+            #print(time_section)
 
+    #print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
@@ -439,7 +442,7 @@ def arbitrate_first(event_id):
             total_must_attend_user += 1
 
     cur.execute("""
-        SELECT user_id, choose_date, choose_time_id FROM choose 
+        SELECT user_id FROM people 
         WHERE event_id = '%s'; 
     """ % (event_id))
 
@@ -457,6 +460,7 @@ def arbitrate_first(event_id):
             total_user += 1
 
     ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
+    #print(ordered_result)
     if ordered_result[0]['count'] < total_must_attend_user / 2:
         conn.commit()
         conn.close()
@@ -477,20 +481,21 @@ def arbitrate_first(event_id):
             prefer = ''
             for row in rows:
                 prefer = row[0]
+            arbitrate_result = []
             if prefer == 'early':
                 conn.commit()
                 conn.close()
-                return [{'date': str(ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': []}]
+                arbitrate_result.append({'date': str(ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': []})
+                return arbitrate_result
             else:
                 conn.commit()
                 conn.close()
-                return [{'date': str(ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []}]
+                arbitrate_result.append({'date': str(ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []})
+                return arbitrate_result
         else:
-            first_three = []
-            for i in range(3):
-                first_three.append(ordered_result[i])
             ordered_time_slot = sorted(
-                first_three, key=itemgetter('choose_time_id', 'choose_date'))
+                ordered_result, key=itemgetter('count', 'choose_time_id', 'choose_date'))
+            print(ordered_time_slot)
             arbitrate_result = []
             for ots in ordered_time_slot:
                 temp_time = {}
@@ -510,9 +515,12 @@ def arbitrate_first(event_id):
                     absent_user.append(row[1])
                 temp_time['absent_user'] = absent_user
                 arbitrate_result.append(temp_time)
+                if len(arbitrate_result) == 3:
+                    break
 
     conn.commit()
     conn.close()
+    print(arbitrate_result)
     return arbitrate_result
 
 def arbitrate_second(event_id):
