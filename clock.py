@@ -54,5 +54,8 @@ def timed_job():
         event_name = send_list[i][2]
         user_name_list = send_list[i][3]
         mention_user(group_id, user_name_list, event_name, event_id)
+    
+    database.db_utils.check_and_end(get_Taiwan_time())
+    
 
 sched.start()
