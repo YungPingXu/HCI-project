@@ -414,7 +414,7 @@ def arbitrate_first(event_id):
     #print(rows)
     result = []
     for row in rows:
-        print(row)
+        #print(row)
         find = False
         for re in result:
             if re['choose_date'] == row[1] and re['choose_time_id'] == row[2]:
@@ -426,9 +426,9 @@ def arbitrate_first(event_id):
             time_section['choose_time_id'] = row[2]
             time_section['count'] = 1
             result.append(time_section)
-            print(time_section)
+            #print(time_section)
 
-    #print(result)
+    print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
