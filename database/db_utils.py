@@ -401,7 +401,7 @@ def arbitrate_first(event_id):
         Input:
             event_id: string
         Output:
-            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__, 'voted_number':__},...,{}]
+            arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__, 'voted_number':__, 'present_user':__},...,{}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
