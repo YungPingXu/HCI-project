@@ -477,6 +477,8 @@ def arbitrate_first(event_id):
 
     ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
     if ordered_result[0]['count'] < total_must_attend_user / 2:
+        conn.commit()
+        conn.close()
         return [{'date': '', 'time_id': -1, 'absent_user': []}]
     else:
         if ordered_result[0]['count'] == total_user:
@@ -495,8 +497,12 @@ def arbitrate_first(event_id):
             for row in rows:
                 prefer = row[0]
             if prefer == 'early':
+                conn.commit()
+                conn.close()
                 return [{'date': str(ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': []}]
             else:
+                conn.commit()
+                conn.close()
                 return [{'date': str(ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': []}]
         else:
             first_three = []
@@ -524,11 +530,9 @@ def arbitrate_first(event_id):
                 temp_time['absent_user'] = absent_user
                 arbitrate_result.append(temp_time)
 
-            return arbitrate_result
-
     conn.commit()
     conn.close()
-
+    return arbitrate_result
 
 def arbitrate_second(event_id):
     '''
@@ -1031,5 +1035,5 @@ def check_and_end(time_date_now):
             UPDATE event SET dead = True
             WHERE event_id = '%s' 
         """ % (event_id))
-
+    conn.commit()
     conn.close()
