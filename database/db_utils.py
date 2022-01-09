@@ -1095,8 +1095,8 @@ def check_and_end(time_date_now):
         result = arbitrate_first(event_id)
         if len(result) == 1:
             result_time = get_time(result[0]["time_id"])
-            start_time = result_time[0]
-            end_time = result_time[1]
+            start_time = result_time[0].strftime("%H:%M")
+            end_time = result_time[1].strftime("%H:%M")
             userstr = ""
             for i in get_already_vote(event_id):
                 userstr += i + "\n"
