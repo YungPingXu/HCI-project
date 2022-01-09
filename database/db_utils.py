@@ -994,3 +994,38 @@ def get_user_attribute(user_id, event_id):
     conn.close()
 
     return user_attribute
+
+
+def get_event_dead(event_id):
+    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT dead FROM event 
+        WHERE event_id = '%s';
+    """ % (event_id))
+
+    rows = cur.fetchall()
+
+    conn.close()
+    return rows[0][0]
+
+def check_and_end(current_time):
+    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT event_id FROM event 
+        WHERE time '%s' >= deadline_time
+        AND dead = False;
+    """ % (current_time))
+
+    rows = cur.fetchall()
+    for row in rows:
+        event_id = row[0]
+        cur.execute("""
+            UPDATE event SET dead = True
+            WHERE event_id = '%s' 
+        """ % (event_id))
+
+    conn.close()

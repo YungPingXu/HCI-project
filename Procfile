@@ -1,2 +1,3 @@
 web: gunicorn index:app –log-file -
-clock: python clock.py
+clock: python mention.py
+clock: python end_event.py
