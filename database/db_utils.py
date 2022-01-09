@@ -414,6 +414,7 @@ def arbitrate_first(event_id):
     #print(rows)
     result = []
     for row in rows:
+        print(row)
         find = False
         for re in result:
             if re['choose_date'] == row[1] and re['choose_time_id'] == row[2]:
