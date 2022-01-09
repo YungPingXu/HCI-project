@@ -46,7 +46,7 @@ def timed_job():
         tmp_send.append([])
         send_list[i[2] + "," + i[3]] = tmp_send
     for i in mention_list:
-        send_list[i[2] + "," + i[3]].append(i[1])
+        send_list[i[2] + "," + i[3]][3].append(i[1])
     print(send_list)
     for i in send_list:
         event_id = send_list[i][0]
