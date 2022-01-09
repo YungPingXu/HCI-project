@@ -601,17 +601,19 @@ def arbitrate_first(event_id):
     return arbitrate_result
 
 
-def arbitrate_second(event_id):
+def arbitrate_second(event_id, first_result):
     '''
         This function arbitrates an event second time.
         Input:
             event_id: string
+            first_result: list
         Output:
             arbitrate_result: list, [{'date':__, 'time_id':__, 'absent_user':__, 'voted_number':__, 'present_user':__}]
     '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
+
     cur.execute("""
         SELECT choose.user_id, choose_date, choose_time_id, event_id FROM choose
         INNER JOIN (SELECT user_id FROM people
@@ -622,20 +624,16 @@ def arbitrate_second(event_id):
         WHERE event_id = '%s';
     """ % (event_id, event_id))
 
-    rows = cur.fetchall()
     result = []
+    for re in first_result:
+        result.append(
+            {'choose_date': re['date'], 'choose_time_id': re['time_id'], 'count': 0})
+
+    rows = cur.fetchall()
     for row in rows:
-        find = False
         for re in result:
             if re['choose_date'] == row[1] and re['choose_time_id'] == row[2]:
                 re['count'] += 1
-                find = True
-        if find == False:
-            time_section = {}
-            time_section['choose_date'] = row[1]
-            time_section['choose_time_id'] = row[2]
-            time_section['count'] = 1
-            result.append(time_section)
 
     total_must_attend_user = 0
     user_list = []
@@ -1313,7 +1311,7 @@ def test(event_id):
     #group_id = "C36e166f739d14fffbd20c0ce7c772eef"
     result = arbitrate_first(event_id)
     print(result, len(result))
-    result = arbitrate_second(event_id)
+    result = arbitrate_second(event_id, result)
     print(result, len(result))
     """FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
     absent_set = []
