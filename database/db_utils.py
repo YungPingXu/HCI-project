@@ -411,7 +411,7 @@ def arbitrate_first(event_id):
     """ % (event_id, event_id))
 
     rows = cur.fetchall()
-    print(rows)
+    #print(rows)
     result = []
     for row in rows:
         find = False
@@ -426,6 +426,7 @@ def arbitrate_first(event_id):
             time_section['count'] = 1
             result.append(time_section)
 
+    print(result)
     total_must_attend_user = 0
     user_list = []
     for row in rows:
