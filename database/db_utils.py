@@ -410,7 +410,6 @@ def arbitrate_first(event_id):
     """ % (event_id))
 
     rows = cur.fetchall()
-    print(rows)
     result = []
     for row in rows:
         find = False
@@ -455,7 +454,7 @@ def arbitrate_first(event_id):
             user_vote.append(row[0])
             total_user += 1
 
-    '''ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
+    ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
     if ordered_result[0]['count'] < total_must_attend_user / 2:
         conn.commit()
         conn.close()
@@ -508,11 +507,11 @@ def arbitrate_first(event_id):
                 for row in rows:
                     absent_user.append(row[1])
                 temp_time['absent_user'] = absent_user
-                arbitrate_result.append(temp_time)'''
+                arbitrate_result.append(temp_time)
 
     conn.commit()
     conn.close()
-    #return arbitrate_result
+    return arbitrate_result
 
 def arbitrate_second(event_id):
     '''
@@ -1019,4 +1018,4 @@ def check_and_end(time_date_now):
     conn.close()
 
     for row in rows:
-        arbitrate_first(row[0])
+        print(arbitrate_first(row[0]))
