@@ -5,7 +5,7 @@
       "url": "https://as1.ftcdn.net/v2/jpg/03/06/03/40/1000_F_306034099_2G1haiuUOj0lsqnytd00qzyxpJshmDDe.jpg",
       "size": "full",
       "aspectRatio": "20:13",
-      "aspectMode": "cover",
+      "aspectMode": "fit",
       "action": {
         "type": "uri",
         "uri": "http://linecorp.com/"

@@ -2,10 +2,10 @@
     "type": "bubble",
     "hero": {
       "type": "image",
-      "url": "https://cdn-icons.flaticon.com/png/512/2973/premium/2973138.png?token=exp=1641714981~hmac=5f073ab352ff35638fa3de38caedde15",
+      "url": "https://cdn-icons-png.flaticon.com/512/1925/1925211.png",
       "size": "full",
       "aspectRatio": "20:13",
-      "aspectMode": "cover",
+      "aspectMode": "fit",
       "action": {
         "type": "uri",
         "uri": "http://linecorp.com/"
