@@ -463,10 +463,13 @@ def arbitrate_first(event_id):
 
     ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
 
+    if len(ordered_result) == 0:
+        return [{'date': '', 'time_id': -1, 'absent_user': [], 'voted_number':0, 'present_user':[]}]
+
     if ordered_result[0]['count'] < total_must_attend_user / 2:
         conn.commit()
         conn.close()
-        return [{'date': '', 'time_id': -1, 'absent_user': [], 'voted_number':0}]
+        return [{'date': '', 'time_id': -1, 'absent_user': [], 'voted_number':0, 'present_user':[]}]
     else:
         if ordered_result[0]['count'] == total_user:
             max_time_slot = []
@@ -695,6 +698,9 @@ def arbitrate_second(event_id, first_result):
             total_user += 1
 
     ordered_result = sorted(result, key=itemgetter('count'), reverse=True)
+
+    if len(ordered_result) == 0:
+        return [{'date': '', 'time_id': -1, 'absent_user': [], 'voted_number':0, 'present_user':[]}]
 
     most_count = []
     for i in range(len(ordered_result)):
