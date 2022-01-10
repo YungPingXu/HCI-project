@@ -36,7 +36,7 @@
                   "text": "【活動名稱】",
                   "color": "#A0522D",
                   "size": "md",
-                  "flex": 3
+                  "flex": 5
                 },
                 {
                   "type": "text",
@@ -59,7 +59,7 @@
                   "text": "【投票截止】",
                   "color": "#A0522D",
                   "size": "md",
-                  "flex": 3
+                  "flex": 5
                 },
                 {
                   "type": "text",
