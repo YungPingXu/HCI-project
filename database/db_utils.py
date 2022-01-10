@@ -486,98 +486,63 @@ def arbitrate_first(event_id):
                 prefer = row[0]
 
             arbitrate_result = []
+            temp_time = {}
             if prefer == 'early':
-                cur.execute("""
-                    SELECT count(distinct user_id) FROM choose
-                    WHERE choose_date = date '%s'
-                    AND choose_time_id = %s
-                    AND event_id = '%s';
-                """ % (str(ordered_max_time_slot[0]['choose_date']), ordered_max_time_slot[0]['choose_time_id'], event_id))
-                rows = cur.fetchall()
-                voted_number = 0
-                for row in rows:
-                    voted_number = row[0]
-
-                cur.execute("""
-                    SELECT user_id, user_name FROM people
-                    WHERE event_id = '%s';
-                """ % (event_id))
-                rows = cur.fetchall()
-                user_name = []
-                for row in rows:
-                    user_name.append((row[0], row[1]))
-
-                cur.execute("""
-                    SELECT DISTINCT user_id FROM choose
-                    WHERE event_id = '%s'
-                    AND choose_date = date '%s'
-                    AND choose_time_id = %s;
-                """ % (event_id, str(ordered_max_time_slot[0]['choose_date']), ordered_max_time_slot[0]['choose_time_id']))
-                rows = cur.fetchall()
-                present_user = []
-                for row in rows:
-                    present_user.append(row[0])
-
-                present_user_name = []
-                for pre in present_user:
-                    for un in user_name:
-                        if pre == un[0]:
-                            present_user_name.append(un[1])
-                temp_time['present_user'] = present_user_name
-
-                conn.commit()
-                conn.close()
-
-                arbitrate_result.append({'date': str(
-                    ordered_max_time_slot[0]['choose_date']), 'time_id': ordered_max_time_slot[0]['choose_time_id'], 'absent_user': [], 'voted_number': voted_number, 'present_user': present_user_name})
-
-                return arbitrate_result
+                temp_time['date'] = str(
+                    ordered_max_time_slot[0]['choose_date'])
+                temp_time['time_id'] = ordered_max_time_slot[0]['choose_time_id']
             else:
-                cur.execute("""
-                    SELECT count(distinct user_id) FROM choose
-                    WHERE choose_date = date '%s'
-                    AND choose_time_id = %s
-                    AND event_id = '%s';
-                """ % (str(ordered_max_time_slot[-1]['choose_date']), ordered_max_time_slot[-1]['choose_time_id'], event_id))
-                rows = cur.fetchall()
-                voted_number = 0
-                for row in rows:
-                    voted_number = row[0]
+                temp_time['date'] = str(
+                    ordered_max_time_slot[-1]['choose_date'])
+                temp_time['time_id'] = ordered_max_time_slot[-1]['choose_time_id']
 
-                cur.execute("""
-                    SELECT user_id, user_name FROM people
-                    WHERE event_id = '%s';
-                """ % (event_id))
-                rows = cur.fetchall()
-                user_name = []
-                for row in rows:
-                    user_name.append((row[0], row[1]))
+            cur.execute("""
+                SELECT count(distinct user_id) FROM choose
+                WHERE choose_date = date '%s'
+                AND choose_time_id = %s
+                AND event_id = '%s';
+            """ % (temp_time['date'], temp_time['time_id'], event_id))
+            rows = cur.fetchall()
+            voted_number = 0
+            for row in rows:
+                voted_number = row[0]
+            temp_time['voted_number'] = voted_number
 
-                cur.execute("""
-                    SELECT DISTINCT user_id FROM choose
-                    WHERE event_id = '%s'
-                    AND choose_date = date '%s'
-                    AND choose_time_id = %s;
-                """ % (event_id, str(ordered_max_time_slot[-1]['choose_date']), ordered_max_time_slot[-1]['choose_time_id']))
-                rows = cur.fetchall()
-                present_user = []
-                for row in rows:
-                    present_user.append(row[0])
+            cur.execute("""
+                SELECT user_id, user_name FROM people
+                WHERE event_id = '%s';
+            """ % (event_id))
+            rows = cur.fetchall()
+            user_name = []
+            for row in rows:
+                user_name.append((row[0], row[1]))
 
-                present_user_name = []
-                for pre in present_user:
-                    for un in user_name:
-                        if pre == un[0]:
-                            present_user_name.append(un[1])
-                temp_time['present_user'] = present_user_name
+            cur.execute("""
+                SELECT DISTINCT user_id FROM choose
+                WHERE event_id = '%s'
+                AND choose_date = date '%s'
+                AND choose_time_id = %s;
+            """ % (event_id, temp_time['date'], temp_time['time_id']))
+            rows = cur.fetchall()
+            present_user = []
+            for row in rows:
+                present_user.append(row[0])
 
-                conn.commit()
-                conn.close()
+            present_user_name = []
+            for pre in present_user:
+                for un in user_name:
+                    if pre == un[0]:
+                        present_user_name.append(un[1])
+            temp_time['present_user'] = present_user_name
 
-                arbitrate_result.append({'date': str(
-                    ordered_max_time_slot[-1]['choose_date']), 'time_id': ordered_max_time_slot[-1]['choose_time_id'], 'absent_user': [], 'voted_number': voted_number, 'present_user': present_user_name})
+            temp_time['absent_user'] = []
 
-                return arbitrate_result
+            conn.commit()
+            conn.close()
+
+            arbitrate_result.append(temp_time)
+
+            return arbitrate_result
         else:
             cur.execute("""
                 SELECT preference FROM event
