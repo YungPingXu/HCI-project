@@ -85,27 +85,6 @@
                   "size": "sm"
                 }
               ]
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "【結算投票】",
-                  "flex": 3,
-                  "size": "sm",
-                  "color": "#DB6D60"
-                },
-                {
-                  "type": "text",
-                  "text": "針對當前投票結果進行",
-                  "flex": 5,
-                  "size": "sm"
-                }
-              ],
-              "spacing": "none",
-              "margin": "xxl"
             }
           ]
         }

@@ -92,28 +92,6 @@
               ],
               "spacing": "none",
               "margin": "sm"
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "【關閉投票】",
-                  "flex": 5,
-                  "size": "sm",
-                  "color": "#DB6D60"
-                },
-                {
-                  "type": "text",
-                  "text": "刪除這次投票紀錄(不可逆)",
-                  "flex": 5,
-                  "size": "sm",
-                  "wrap": true
-                }
-              ],
-              "spacing": "none",
-              "margin": "xxl"
             }
           ]
         }
