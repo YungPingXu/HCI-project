@@ -123,7 +123,6 @@
 
         .note {
             font-size: 15px;
-            margin-left: 20px;
         }
 
         .label-text {
@@ -131,9 +130,6 @@
             font-weight: normal;
         }
 
-        #preference {
-            margin-left: 20px;
-        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js'></script>
@@ -263,12 +259,12 @@
             </div>
             <div class="inner-content">
                 <input type="checkbox" class="check-box" onclick="preference()"> 偏好時段<br>
-                <div id="preference-content" style="display: none;">
+                <div id="preference-content">
                     <span class="note">*當有多個時段吻合,系統將依據您的偏好選出最佳時段</span><br>
                     <input type="radio" id="preference" name="preference" value="early">
-                      <label for="early" class="label-text">早一點</label>
-                      <input type="radio" id="preference" name="preference" value="late">
-                      <label for="late" class="label-text">晚一點</label>
+                    <label for="early" class="label-text">早一點</label>
+                    <input type="radio" id="preference" name="preference" value="late">
+                    <label for="late" class="label-text">晚一點</label>
                 </div>
             </div>
             <div class="inner-content">
