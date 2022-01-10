@@ -49,7 +49,7 @@
               ],
               "spacing": "none",
               "margin": "md"
-            },
+            }, 
             {
               "type": "box",
               "layout": "baseline",
