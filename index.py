@@ -4,6 +4,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 from linebot.models import FlexSendMessage, TextSendMessage
 from dotenv import load_dotenv
+from linebot.models.responses import Group
 from database import db_utils
 
 from datetime import timedelta
@@ -108,11 +109,13 @@ def create_event():
         event_attribute = []
 
         length_of_string = 8
+        group_id = request.values["group_id"]
+        event_name = request.values["event_name"]
         event_id = ''.join(random.SystemRandom().choice(
             string.ascii_letters + string.digits) for _ in range(length_of_string))
         print("event id is", event_id)  # add
         event_attribute.append(event_id)
-        event_attribute.append(request.values["event_name"])
+        event_attribute.append(event_name)
 
         dates = []
         for date in request.values["date"].split(','):
@@ -148,27 +151,34 @@ def create_event():
         # event_attribute.append(request.values["have_must_attend"])
         event_attribute.append('false')
 
-        event_attribute.append(request.values["group_id"])
+        event_attribute.append(group_id)
         event_attribute.append('none')
 
         db_utils.insert_event(event_attribute)
 
         # use member_list to insert table people
-        for member in db_utils.get_members(request.values["group_id"]):
+        for member in db_utils.get_members(group_id):
             user_attribute = []
             user_attribute.append(member[0])
             user_attribute.append(member[1])
             user_attribute.append(event_id)
-            user_attribute.append(request.values["group_id"])
+            user_attribute.append(group_id)
             user_attribute.append("false")
             user_attribute.append("true")
-            user_attribute.append(request.values["event_name"])
-            print(request.values["event_name"])
+            user_attribute.append(event_name)
+            print(event_name)
             db_utils.insert_people(user_attribute)
+
+        FlexMessage = json.load(open('voting_time.json', 'r', encoding='utf-8'))
+        FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
+        FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = deadline_time
+        FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
+        FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_vote?event_id=" + event_id
+        FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/first_settle?event_id=" + event_id + "&event_name=" + event_name + "&group_id=" + group_id
+        line_bot_api.reply_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
         return event_id
     return redirect(url_for("index"))
-
 
 time_mapping = {
     "00:00": 1,
@@ -434,8 +444,21 @@ def display_result():
             return "event_id parameter does not exist"
     return redirect(url_for("index"))
 
-@app.route("/settle", methods=["GET"])  # 路由和處理函式配對
-def settle():
+@app.route("/first_settle", methods=["GET"])  # 路由和處理函式配對
+def first_settle():
+    if request.method == "GET":
+        if "event_id" in request.values and "event_name" in request.values and "group_id" in request.values:
+            event_id = request.values["event_id"]
+            event_name = request.values["event_name"]
+            group_id = request.values["group_id"]
+            db_utils.settle(event_id, event_name, group_id)
+            return render_template("first-settle.html")
+        else:
+            return "some parameter does not exist"
+    return redirect(url_for("index"))
+
+@app.route("/second_settle", methods=["GET"])  # 路由和處理函式配對
+def second_settle():
     if request.method == "GET":
         if "event_id" in request.values and "event_name" in request.values and "group_id" in request.values:
             event_id = request.values["event_id"]
@@ -457,7 +480,7 @@ def settle():
             FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = present_user_str
             FlexMessage["body"]["contents"][1]["contents"][3]["contents"][1]["text"] = absent_user_str
             line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
-            return render_template("settle.html")
+            return render_template("second-settle.html")
         else:
             return "some parameter does not exist"
     return redirect(url_for("index"))

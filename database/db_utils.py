@@ -1202,6 +1202,47 @@ def get_time(time_id):
 
     return time_duration
 
+def settle(event_id, event_name, group_id):
+    result = arbitrate_first(event_id)
+    print(result, len(result))
+    if len(result) == 1:
+        result_date = result[0]["date"]
+        result_time = get_time(result[0]["time_id"])
+        start_time = result_time[0].strftime("%H:%M")
+        end_time = result_time[1].strftime("%H:%M")
+        userstr = ""
+        for i in get_already_vote(event_id):
+            userstr += i + "\n"
+        FlexMessage = json.load(
+            open('normal_result.json', 'r', encoding='utf-8'))
+        FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
+        FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + \
+            "\n" + start_time + "～" + end_time
+        FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = userstr
+        FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
+        line_bot_api.push_message(
+            group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+    else:
+        FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
+        absent_set = []
+        for i in range(3):
+            FlexMessage["body"]["contents"][1]["contents"][i + 1]["contents"][1]["text"] = result[i]["date"] + "\n" + \
+                get_time(result[i]["time_id"])[0].strftime("%H:%M") + "～" + get_time(result[i]["time_id"])[
+                1].strftime("%H:%M") + "\n參與人數共 " + str(result[i]["voted_number"]) + " 人"
+            for j in result[i]["absent_user"]:
+                absent_set.append(j)
+        absent_set = set(absent_set)
+        members = ""
+        for i in absent_set:
+            members += "@" + i + " "
+        FlexMessage["body"]["contents"][1]["contents"][4]["text"] = "請 " + \
+            members + "針對以上時段再次確認是否能夠參與此活動！"
+        FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
+        FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
+        FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/second_settle?event_id=" + \
+            event_id + "&event_name=" + event_name + "&group_id=" + group_id
+        line_bot_api.push_message(
+            group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
 def check_and_end(time_date_now):
     '''
@@ -1237,46 +1278,7 @@ def check_and_end(time_date_now):
         event_id = row[0]
         event_name = row[1]
         group_id = row[2]
-        result = arbitrate_first(event_id)
-        print(result, len(result))
-        if len(result) == 1:
-            result_date = result[0]["date"]
-            result_time = get_time(result[0]["time_id"])
-            start_time = result_time[0].strftime("%H:%M")
-            end_time = result_time[1].strftime("%H:%M")
-            userstr = ""
-            for i in get_already_vote(event_id):
-                userstr += i + "\n"
-            FlexMessage = json.load(
-                open('normal_result.json', 'r', encoding='utf-8'))
-            FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
-            FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + \
-                "\n" + start_time + "～" + end_time
-            FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = userstr
-            FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
-            line_bot_api.push_message(
-                group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
-        else:
-            FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
-            absent_set = []
-            for i in range(3):
-                FlexMessage["body"]["contents"][1]["contents"][i + 1]["contents"][1]["text"] = result[i]["date"] + "\n" + \
-                    get_time(result[i]["time_id"])[0].strftime("%H:%M") + "～" + get_time(result[i]["time_id"])[
-                    1].strftime("%H:%M") + "\n參與人數共 " + str(result[i]["voted_number"]) + " 人"
-                for j in result[i]["absent_user"]:
-                    absent_set.append(j)
-            absent_set = set(absent_set)
-            members = ""
-            for i in absent_set:
-                members += "@" + i + " "
-            FlexMessage["body"]["contents"][1]["contents"][4]["text"] = "請 " + \
-                members + "針對以上時段再次確認是否能夠參與此活動！"
-            FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
-            FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
-            FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/settle?event_id=" + \
-                event_id + "&event_name=" + event_name + "&group_id=" + group_id
-            line_bot_api.push_message(
-                group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+        settle(event_id, event_name, group_id)
 
 
 def test(event_id):
