@@ -30,7 +30,6 @@
             {
               "type": "box",
               "layout": "baseline",
-              "spacing": "sm",
               "contents": [
                 {
                   "type": "text",
@@ -47,12 +46,13 @@
                   "size": "md",
                   "flex": 5
                 }
-              ]
+              ],
+              "spacing": "none",
+              "margin": "md"
             },
             {
               "type": "box",
               "layout": "baseline",
-              "spacing": "sm",
               "contents": [
                 {
                   "type": "text",
@@ -70,7 +70,9 @@
                   "flex": 5,
                   "margin": "none"
                 }
-              ]
+              ],
+              "spacing": "none",
+              "margin": "md"
             },
             {
               "type": "box",
