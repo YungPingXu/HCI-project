@@ -482,6 +482,8 @@ def second_settle():
             FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = present_user_str
             if absent_user_str != "":
                 FlexMessage["body"]["contents"][1]["contents"][3]["contents"][1]["text"] = absent_user_str
+            else:
+                FlexMessage["body"]["contents"][1]["contents"][3]["contents"][1]["text"] = "無"
             print(FlexMessage)
             line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
             return render_template("second-settle.html")
