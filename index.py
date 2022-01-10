@@ -175,6 +175,7 @@ def create_event():
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/first_settle?event_id=" + event_id + "&event_name=" + event_name + "&group_id=" + group_id
+        print(FlexMessage)
         line_bot_api.push_message(group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
         return event_id
