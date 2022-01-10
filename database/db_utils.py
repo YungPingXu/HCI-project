@@ -7,6 +7,7 @@ import json
 from linebot import LineBotApi
 from linebot.models import *
 from linebot.models import FlexSendMessage, TextSendMessage
+from urllib import parse
 
 ### don't touch ###
 load_dotenv()
@@ -1239,7 +1240,7 @@ def settle(event_id, event_name, group_id):
             userstr += i + "\n"
         FlexMessage = json.load(
             open('normal_result.json', 'r', encoding='utf-8'))
-        FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
+        FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = parse.unquote(event_name)
         FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + \
             "\n" + start_time + "～" + end_time
         FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = userstr
@@ -1264,7 +1265,7 @@ def settle(event_id, event_name, group_id):
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
         FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/second_settle?event_id=" + \
-            event_id + "&event_name=" + event_name + "&group_id=" + group_id
+            event_id + "&event_name=" + parse.unquote(event_name) + "&group_id=" + group_id
         line_bot_api.push_message(
             group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 

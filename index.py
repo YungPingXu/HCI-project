@@ -243,7 +243,7 @@ def vote():
             if event_attribute:
                 result = {}
                 result["event_id"] = event_attribute["event_id"]
-                result["event_name"] = event_attribute['event_name']
+                result["event_name"] = parse.unquote(event_attribute['event_name'])
                 result["member_list"] = db_utils.get_members(
                     event_attribute['group_id'])
                 result["date_list"] = []
@@ -326,7 +326,7 @@ def display_vote():
             if event_attribute:
                 result = {}
                 result["event_id"] = event_attribute["event_id"]
-                result["event_name"] = event_attribute['event_name']
+                result["event_name"] = parse.unquote(event_attribute['event_name'])
                 result["date_list"] = []
 
                 current_date = event_attribute["start_date"]
@@ -390,7 +390,7 @@ def display_result():
             if event_attribute:
                 result = {}
                 result["event_id"] = event_attribute["event_id"]
-                result["event_name"] = event_attribute['event_name']
+                result["event_name"] = parse.unquote(event_attribute['event_name'])
                 result["date_list"] = []
 
                 current_date = event_attribute["start_date"]
@@ -477,7 +477,7 @@ def second_settle():
             for i in result["absent_user"]:
                 absent_user_str += i + "\n"
             FlexMessage = json.load(open('second_result.json', 'r', encoding='utf-8'))
-            FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
+            FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = parse.unquote(event_name)
             FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = result_date + "\n" + start_time + "～" + end_time
             FlexMessage["body"]["contents"][1]["contents"][2]["contents"][1]["text"] = present_user_str
             FlexMessage["body"]["contents"][1]["contents"][3]["contents"][1]["text"] = absent_user_str
