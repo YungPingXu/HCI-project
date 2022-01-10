@@ -29,6 +29,11 @@
           "contents": [
             {
               "type": "text",
+              "text": "event_name",
+              "size": "md"
+            },
+            {
+              "type": "text",
               "text": "目前最高票3個時段依序是：",
               "size": "md"
             },
