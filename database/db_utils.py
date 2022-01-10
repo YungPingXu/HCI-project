@@ -1261,7 +1261,7 @@ def settle(event_id, event_name, group_id):
         members = ""
         for i in absent_set:
             members += "@" + i + " "
-        FlexMessage["body"]["contents"][1]["contents"][4]["text"] = "請 " + \
+        FlexMessage["body"]["contents"][1]["contents"][5]["text"] = "請 " + \
             members + "針對以上時段再次確認是否能夠參與此活動！"
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
