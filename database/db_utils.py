@@ -1203,6 +1203,16 @@ def get_time(time_id):
     return time_duration
 
 def settle(event_id, event_name, group_id):
+    conn = psycopg2.connect(database=database, user=user,
+                            password=password, host=host, port=port)
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE event SET dead = True
+        WHERE event_id = '%s'
+    """ % (event_id))
+    conn.commit()
+    conn.close()
+
     result = arbitrate_first(event_id)
     print(result, len(result))
     if len(result) == 1:
@@ -1265,12 +1275,6 @@ def check_and_end(time_date_now):
     """ % (time_now, date_now))
 
     rows = cur.fetchall()
-    for row in rows:
-        event_id = row[0]
-        cur.execute("""
-            UPDATE event SET dead = True
-            WHERE event_id = '%s'
-        """ % (event_id))
     conn.commit()
     conn.close()
 
