@@ -170,7 +170,7 @@ def create_event():
             db_utils.insert_people(user_attribute)
 
         FlexMessage = json.load(open('voting_time.json', 'r', encoding='utf-8'))
-        FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
+        FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = "\"" + event_name + "\""
         FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = deadline_date + "\n" + deadline_time
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_vote?event_id=" + event_id
