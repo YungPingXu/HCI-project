@@ -7,6 +7,7 @@ from linebot import LineBotApi
 from linebot.models import *
 from linebot.models import FlexSendMessage, TextSendMessage
 import json
+from urllib import parse
 
 load_dotenv()
 # Channel Access Token
@@ -51,7 +52,7 @@ def timed_job():
     for i in send_list:
         event_id = send_list[i][0]
         group_id = send_list[i][1]
-        event_name = send_list[i][2]
+        event_name = parse.unquote(send_list[i][2])
         user_name_list = send_list[i][3]
         mention_user(group_id, user_name_list, event_name, event_id)
     
