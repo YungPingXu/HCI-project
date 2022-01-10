@@ -1202,7 +1202,15 @@ def get_time(time_id):
 
     return time_duration
 
+
 def settle(event_id, event_name, group_id):
+    '''
+        This function arbitrates the result one time and returns arbitrated result.
+        Input:
+            event_id: string
+            event_name: string
+            group_id: string
+    '''
     conn = psycopg2.connect(database=database, user=user,
                             password=password, host=host, port=port)
     cur = conn.cursor()
@@ -1253,6 +1261,7 @@ def settle(event_id, event_name, group_id):
             event_id + "&event_name=" + event_name + "&group_id=" + group_id
         line_bot_api.push_message(
             group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
+
 
 def check_and_end(time_date_now):
     '''
