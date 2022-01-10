@@ -748,128 +748,70 @@ def arbitrate_second(event_id, first_result):
     for row in rows:
         prefer = row[0]
 
+    temp_time = {}
     if prefer == 'early':
-        temp_time = {}
         temp_time['date'] = str(ordered_time_slot[0]['choose_date'])
         temp_time['time_id'] = ordered_time_slot[0]['choose_time_id']
-
-        cur.execute("""
-            SELECT DISTINCT user_id FROM choose
-            WHERE event_id = '%s'
-            AND choose_date = date '%s'
-            AND choose_time_id = %s;
-        """ % (event_id, temp_time['date'], temp_time['time_id']))
-        rows = cur.fetchall()
-        present_user = []
-        for row in rows:
-            present_user.append(row[0])
-
-        cur.execute("""
-            SELECT user_id, user_name FROM people
-            WHERE event_id = '%s';
-        """ % (event_id))
-        rows = cur.fetchall()
-        all_user = []
-        user_name = []
-        for row in rows:
-            all_user.append(row[0])
-            user_name.append((row[0], row[1]))
-
-        absent_user = []
-        for au in all_user:
-            pre = False
-            for pu in present_user:
-                if au == pu:
-                    pre = True
-                    break
-            if pre == False:
-                for un in user_name:
-                    if au == un[0]:
-                        absent_user.append(un[1])
-                        break
-        temp_time['absent_user'] = absent_user
-
-        present_user_name = []
-        for pre in present_user:
-            for un in user_name:
-                if pre == un[0]:
-                    present_user_name.append(un[1])
-        temp_time['present_user'] = present_user_name
-
-        cur.execute("""
-            SELECT count(distinct user_id) FROM choose
-            WHERE choose_date = date '%s'
-            AND choose_time_id = %s
-            AND event_id = '%s';
-        """ % (temp_time['date'], temp_time['time_id'], event_id))
-        rows = cur.fetchall()
-        voted_number = 0
-        for row in rows:
-            voted_number = row[0]
-        temp_time['voted_number'] = voted_number
-
-        arbitrate_result.append(temp_time)
     else:
-        temp_time = {}
         temp_time['date'] = str(ordered_time_slot[-1]['choose_date'])
         temp_time['time_id'] = ordered_time_slot[-1]['choose_time_id']
 
-        cur.execute("""
-            SELECT DISTINCT user_id FROM choose
-            WHERE event_id = '%s'
-            AND choose_date = date '%s'
-            AND choose_time_id = %s;
-        """ % (event_id, temp_time['date'], temp_time['time_id']))
-        rows = cur.fetchall()
-        present_user = []
-        for row in rows:
-            present_user.append(row[0])
+    cur.execute("""
+        SELECT DISTINCT user_id FROM choose
+        WHERE event_id = '%s'
+        AND choose_date = date '%s'
+        AND choose_time_id = %s;
+    """ % (event_id, temp_time['date'], temp_time['time_id']))
+    rows = cur.fetchall()
+    present_user = []
+    for row in rows:
+        present_user.append(row[0])
 
-        cur.execute("""
-            SELECT user_id, user_name FROM people
-            WHERE event_id = '%s';
-        """ % (event_id))
-        rows = cur.fetchall()
-        all_user = []
-        user_name = []
-        for row in rows:
-            all_user.append(row[0])
-            user_name.append((row[0], row[1]))
+    cur.execute("""
+        SELECT user_id, user_name FROM people
+        WHERE event_id = '%s';
+    """ % (event_id))
+    rows = cur.fetchall()
+    all_user = []
+    user_name = []
+    for row in rows:
+        all_user.append(row[0])
+        user_name.append((row[0], row[1]))
 
-        absent_user = []
-        for au in all_user:
-            pre = False
-            for pu in present_user:
-                if au == pu:
-                    pre = True
-                    break
-            if pre == False:
-                for un in user_name:
-                    if au == un[0]:
-                        absent_user.append(un[1])
-                        break
-        temp_time['absent_user'] = absent_user
-
-        present_user_name = []
-        for pre in present_user:
+    absent_user = []
+    for au in all_user:
+        pre = False
+        for pu in present_user:
+            if au == pu:
+                pre = True
+                break
+        if pre == False:
             for un in user_name:
-                if pre == un[0]:
-                    present_user_name.append(un[1])
-        temp_time['present_user'] = present_user_name
+                if au == un[0]:
+                    absent_user.append(un[1])
+                    break
+    temp_time['absent_user'] = absent_user
 
-        cur.execute("""
-            SELECT count(distinct user_id) FROM choose
-            WHERE choose_date = date '%s'
-            AND choose_time_id = %s
-            AND event_id = '%s';
-        """ % (temp_time['date'], temp_time['time_id'], event_id))
-        rows = cur.fetchall()
-        voted_number = 0
-        for row in rows:
-            voted_number = row[0]
-        temp_time['voted_number'] = voted_number
+    present_user_name = []
+    for pre in present_user:
+        for un in user_name:
+            if pre == un[0]:
+                present_user_name.append(un[1])
+    temp_time['present_user'] = present_user_name
 
-        arbitrate_result.append(temp_time)
+    cur.execute("""
+        SELECT count(distinct user_id) FROM choose
+        WHERE choose_date = date '%s'
+        AND choose_time_id = %s
+        AND event_id = '%s';
+    """ % (temp_time['date'], temp_time['time_id'], event_id))
+    rows = cur.fetchall()
+    voted_number = 0
+    for row in rows:
+        voted_number = row[0]
+    temp_time['voted_number'] = voted_number
+
+    arbitrate_result.append(temp_time)
 
     conn.commit()
     conn.close()
@@ -1354,7 +1296,8 @@ def check_and_end(time_date_now):
             absent_set = []
             for i in range(3):
                 FlexMessage["body"]["contents"][1]["contents"][i + 1]["contents"][1]["text"] = result[i]["date"] + "\n" + \
-                    get_time(result[i]["time_id"])[0].strftime("%H:%M") + "～" + get_time(result[i]["time_id"])[1].strftime("%H:%M") + "\n參與人數共 " + str(result[i]["voted_number"]) + " 人"
+                    get_time(result[i]["time_id"])[0].strftime("%H:%M") + "～" + get_time(result[i]["time_id"])[
+                    1].strftime("%H:%M") + "\n參與人數共 " + str(result[i]["voted_number"]) + " 人"
                 for j in result[i]["absent_user"]:
                     absent_set.append(j)
             absent_set = set(absent_set)
@@ -1365,7 +1308,8 @@ def check_and_end(time_date_now):
                 members + "針對以上時段再次確認是否能夠參與此活動！"
             FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
             FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
-            FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/settle?event_id=" + event_id + "&event_name=" + event_name + "&group_id=" + group_id 
+            FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/settle?event_id=" + \
+                event_id + "&event_name=" + event_name + "&group_id=" + group_id
             line_bot_api.push_message(
                 group_id, FlexSendMessage('Scheduling Bot', FlexMessage))
 
