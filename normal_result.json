@@ -131,18 +131,8 @@
           "action": {
             "type": "uri",
             "label": "查看投票之完整結果",
-            "uri": "https://www.youtube.com/watch?v=39ixCVI9ACU"
+            "uri": ""
           }
-        },
-        {
-          "type": "button",
-          "action": {
-            "type": "uri",
-            "label": "關閉投票",
-            "uri": "https://www.youtube.com/watch?v=EgS4A0YsIaY"
-          },
-          "height": "sm",
-          "style": "link"
         }
       ],
       "flex": 0

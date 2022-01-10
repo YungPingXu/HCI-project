@@ -171,7 +171,7 @@ def create_event():
 
         FlexMessage = json.load(open('voting_time.json', 'r', encoding='utf-8'))
         FlexMessage["body"]["contents"][1]["contents"][0]["contents"][1]["text"] = event_name
-        FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = deadline_date + " " + deadline_time
+        FlexMessage["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = deadline_date + "\n" + deadline_time
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/first_settle?event_id=" + event_id + "&event_name=" + event_name + "&group_id=" + group_id
