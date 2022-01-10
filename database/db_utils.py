@@ -1250,8 +1250,8 @@ def settle(event_id, event_name, group_id):
     else:
         FlexMessage = json.load(open('judge.json', 'r', encoding='utf-8'))
         absent_set = []
+        FlexMessage["body"]["contents"][1]["contents"][0] = "「" + parse.unquote(event_name) + "」目前最高票3個時段依序是："
         for i in range(3):
-            FlexMessage["body"]["contents"][1]["contents"][0] = "「" + parse.unquote(event_name) + "」目前最高票3個時段依序是："
             FlexMessage["body"]["contents"][1]["contents"][i + 1]["contents"][1]["text"] = result[i]["date"] + "\n" + \
                 get_time(result[i]["time_id"])[0].strftime("%H:%M") + "～" + get_time(result[i]["time_id"])[
                 1].strftime("%H:%M") + "\n參與人數共 " + str(result[i]["voted_number"]) + " 人"
