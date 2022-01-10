@@ -1265,7 +1265,7 @@ def settle(event_id, event_name, group_id):
         FlexMessage["footer"]["contents"][0]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/vote?event_id=" + event_id
         FlexMessage["footer"]["contents"][1]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/display_result?event_id=" + event_id
         FlexMessage["footer"]["contents"][2]["action"]["uri"] = "https://scheduling-line-bot.herokuapp.com/second_settle?event_id=" + \
-            event_id + "&event_name=" + event_name + "&group_id=" + group_id
+            event_id + "&event_name=" + parse.quote(event_name) + "&group_id=" + group_id
         print("settle:")
         print(FlexMessage)
         line_bot_api.push_message(
